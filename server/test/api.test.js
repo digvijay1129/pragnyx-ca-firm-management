@@ -137,7 +137,9 @@ describe("PragnyX API integration", () => {
   });
 
   it("creates public inquiries and lets administrators view and update them", async () => {
-    const created = await request(app).post("/api/inquiries").send({
+    const created = await request(app).post("/api/inquiries")
+      .set("Authorization", "Bearer " + clientToken)
+      .send({
       name: "Public Visitor",
       email: "visitor@example.test",
       phone: "+91 98765 12345",
@@ -146,8 +148,9 @@ describe("PragnyX API integration", () => {
     }).expect(201);
     inquiryId = created.body.inquiry._id;
 
-    await request(app).get("/api/inquiries/mine")
-      .set("Authorization", `Bearer ${clientToken}`).expect(200);
+    const mine = await request(app).get("/api/inquiries/mine")
+      .set("Authorization", "Bearer " + clientToken).expect(200);
+    assert.ok(mine.body.inquiries.some((item) => item._id === inquiryId));
 
     const adminLogin = await request(app).post("/api/auth/login").send({
       email: "integration.admin@example.test",
