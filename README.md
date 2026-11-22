@@ -153,6 +153,33 @@ Send protected API requests with `Authorization: Bearer <token>`.
 - Secrets belong in local environment variables or deployment secret settings, never in Git.
 - This is an assignment implementation. Before production use, consider moving JWTs to secure HttpOnly cookies, adding email verification/password reset, audit logging, CSRF protections as applicable, and more comprehensive automated tests.
 
+## Automated API tests
+
+The backend uses the Node.js test runner and Supertest. Integration tests connect to a disposable MongoDB database and exercise real Express routes.
+
+```bash
+cd server
+npm install
+MONGODB_URI=mongodb://127.0.0.1:27017/pragnyx_test JWT_SECRET=local-test-secret-with-enough-entropy npm test
+```
+
+The integration test suite clears its configured test database before and after the run. **Use a dedicated test database only; never point the test command at a development, staging, or production database.**
+
+GitHub Actions runs three checks on pushes and pull requests to main: the frontend production build, backend JavaScript syntax validation, and MongoDB-backed API integration tests.
+
+## Deployment checklist
+
+Deployment requires accounts and credentials that must be supplied by the project owner:
+
+1. Create a MongoDB Atlas database and a database user. Restrict network access to the deployed API service where practical.
+2. Deploy the Node.js API from the `server` directory. Set `NODE_ENV=production`, `PORT` (provided by the host), `MONGODB_URI`, a long random `JWT_SECRET`, `JWT_EXPIRES_IN=1d`, and the exact frontend origin in `CLIENT_URL`.
+3. Run `npm run seed` once against the production database. Set `ADMIN_NAME`, `ADMIN_EMAIL` and a unique `ADMIN_PASSWORD` of at least 12 characters for the first administrator. Run this command only against the intended database.
+4. Deploy the static frontend from the `client` directory with build command `npm install && npm run build` and publish directory `dist`. Set `VITE_API_BASE_URL` to the deployed API's `/api` URL. Set the firm's real LinkedIn and Instagram URLs.
+5. Configure SPA fallback rewrites to `/index.html`, update the API CORS origin to the actual frontend domain, and verify the public `/health` endpoint.
+6. Perform the manual smoke-test checklist in `docs/TESTING-AND-DEPLOYMENT.md` and record the final frontend URL, API URL, and separately shared test credentials.
+
+Do not commit production secrets or real administrator credentials. The repository does not currently contain live deployment URLs; these are created by the chosen hosting accounts.
+
 ## Assignment reference
 
 See [docs/ASSIGNMENT-CHECKLIST.md](docs/ASSIGNMENT-CHECKLIST.md) for the feature checklist and [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the collection schema, relationships, indexes, validation rules and complete API route map. The project should be evaluated against the supplied PragnyX assignment PDF; sample website copy and contact details are placeholders and must be customized before public business use.
