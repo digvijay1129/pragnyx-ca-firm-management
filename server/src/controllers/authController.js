@@ -24,7 +24,7 @@ export const register = asyncHandler(async (req, res) => {
   if (Buffer.byteLength(password, "utf8") > 72) {
     throw new HttpError(400, "Password must be no longer than 72 UTF-8 bytes.");
   }
-  if (phone !== "" && !isValidPhone(phone)) throw new HttpError(400, "Enter a valid phone number.");
+  if (typeof phone !== "string" || (phone !== "" && !isValidPhone(phone))) throw new HttpError(400, "Enter a valid phone number.");
 
   const normalizedEmail = email.trim().toLowerCase();
   const user = await User.create({
