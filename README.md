@@ -116,7 +116,9 @@ Create a normal client account through Register. Sign in to the administrator ac
 | PATCH | `/api/auth/profile` | Client/Admin | Update name and phone |
 | GET | `/api/services` | Public | List active services |
 | GET | `/api/services/:slug` | Public | Service detail |
-| POST/PATCH/DELETE | `/api/services` | Admin | Create/update/archive service |
+| POST | `/api/services` | Admin | Create a service |
+| PATCH | `/api/services/:id` | Admin | Update a service |
+| DELETE | `/api/services/:id` | Admin | Archive a service |
 | POST | `/api/inquiries` | Public | Submit contact inquiry |
 | GET | `/api/inquiries/mine` | Client | Client inquiry history |
 | GET | `/api/inquiries` | Admin | List inquiries |
@@ -147,13 +149,13 @@ Send protected API requests with `Authorization: Bearer <token>`.
 - Passwords are hashed with bcryptjs and are never returned by user API responses.
 - Public registration always creates a `client`; administrator role is assigned only by the controlled seed process.
 - Admin API routes enforce role-based authorization on the server.
-- Booking dates are validated on the backend as well as in the browser.
+- Booking dates are validated as real calendar dates on the backend as well as in the browser.
 - Secrets belong in local environment variables or deployment secret settings, never in Git.
 - This is an assignment implementation. Before production use, consider moving JWTs to secure HttpOnly cookies, adding email verification/password reset, audit logging, CSRF protections as applicable, and more comprehensive automated tests.
 
 ## Assignment reference
 
-See [docs/ASSIGNMENT-CHECKLIST.md](docs/ASSIGNMENT-CHECKLIST.md) for the feature checklist and [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for architecture notes. The project should be evaluated against the supplied PragnyX assignment PDF; sample website copy and contact details are placeholders and must be customized before public business use.
+See [docs/ASSIGNMENT-CHECKLIST.md](docs/ASSIGNMENT-CHECKLIST.md) for the feature checklist and [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the collection schema, relationships, indexes, validation rules and complete API route map. The project should be evaluated against the supplied PragnyX assignment PDF; sample website copy and contact details are placeholders and must be customized before public business use.
 
 ## Branch policy
 
