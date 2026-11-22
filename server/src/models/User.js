@@ -3,8 +3,25 @@ import bcrypt from "bcryptjs";
 
 const userSchema = new mongoose.Schema({
   name: { type: String, required: true, trim: true, maxlength: 100 },
-  email: { type: String, required: true, unique: true, lowercase: true, trim: true, maxlength: 180 },
-  phone: { type: String, trim: true, maxlength: 30, default: "" },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    lowercase: true,
+    trim: true,
+    maxlength: 180,
+    match: /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/,
+  },
+  phone: {
+    type: String,
+    trim: true,
+    maxlength: 30,
+    default: "",
+    validate: {
+      validator: (value) => !value || /^\\+?[0-9][0-9\\s().-]{6,28}$/.test(value),
+      message: "Enter a valid phone number.",
+    },
+  },
   password: { type: String, required: true, minlength: 8, select: false },
   role: { type: String, enum: ["client", "admin"], default: "client", immutable: true },
   isActive: { type: Boolean, default: true },
