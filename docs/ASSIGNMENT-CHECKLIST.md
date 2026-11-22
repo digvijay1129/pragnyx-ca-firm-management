@@ -53,7 +53,7 @@ The service seed script creates or updates all eight services. Service deletion 
 | Input validation and error handling | `utils/validators.js`, Mongoose models, `errorHandler.js` | Implemented; covered by API tests |
 | MongoDB, Mongoose, schemas and data validation | `server/src/models`, `config/db.js` | Implemented; MongoDB 7 integration tests passed in CI |
 | Git and GitHub | Repository and `.github/workflows/ci.yml` | Implemented |
-| Postman for API testing | `postman/PragnyX_CA_Firm_Management.postman_collection.json`, executed with Newman in GitHub Actions | <badge>Newman CI verified: 26 requests, 32 assertions passed; manual Postman desktop import/run pending |
+| Postman for API testing | `postman/PragnyX_CA_Firm_Management.postman_collection.json`, executed with Newman in GitHub Actions | Newman CI verified: 26 requests, 32 assertions passed; manual Postman desktop import/run pending |
 | Environment variables | `server/.env.example`, `client/.env.example` | Implemented |
 | Deployment platform | Hosting configuration and owner connections | Deployment pending |
 
