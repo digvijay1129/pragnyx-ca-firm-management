@@ -41,8 +41,8 @@ test("public pages and responsive navigation", async ({ page }) => {
   await capture(page, "contact");
 });
 
-test("client and administrator business workflows", async ({ page }) => {
-  const runId = process.env.GITHUB_RUN_ID || String(Date.now());
+test("client and administrator business workflows", async ({ page }, testInfo) => {
+  const runId = (process.env.GITHUB_RUN_ID || String(Date.now())) + "-retry-" + testInfo.retry;
   const email = `pragnyx-browser-${runId}@example.test`;
   const password = process.env.E2E_CLIENT_PASSWORD;
   const adminEmail = process.env.E2E_ADMIN_EMAIL;
@@ -63,6 +63,7 @@ test("client and administrator business workflows", async ({ page }) => {
   await capture(page, "client-dashboard");
 
   const requestForm = page.locator(".request-form");
+  await expect(requestForm.locator('select[name="service"] option')).toContainText("Income Tax Filing");
   await requestForm.locator('select[name="service"]').selectOption({ label: "Income Tax Filing" });
   await requestForm.locator('textarea[name="details"]').fill("Please help me file my income tax return.");
   await requestForm.getByRole("button", { name: /Submit request/ }).click();
@@ -84,6 +85,7 @@ test("client and administrator business workflows", async ({ page }) => {
 
   await page.goto("/booking");
   const bookingForm = page.locator("form.form-card");
+  await expect(bookingForm.locator('select[name="service"] option')).toContainText("Income Tax Filing");
   const date = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
   await bookingForm.locator('input[name="name"]').fill("Browser QA Client Updated");
   await bookingForm.locator('input[name="email"]').fill(email);
@@ -130,24 +132,27 @@ test("client and administrator business workflows", async ({ page }) => {
   await expect(page.getByRole("row").filter({ hasText: email })).toBeVisible();
 
   await page.getByRole("tab", { name: "Services" }).click();
+  const temporaryServiceName = "Browser QA Temporary Service " + runId;
+  const temporaryServiceSlug = "browser-qa-temp-" + runId;
   const addForm = page.locator("form.inline-add-form");
-  await addForm.locator('input[name="name"]').fill("Browser QA Temporary Service");
-  await addForm.locator('input[name="slug"]').fill("browser-qa-temporary-service");
+  await addForm.locator('input[name="name"]').fill(temporaryServiceName);
+  await addForm.locator('input[name="slug"]').fill(temporaryServiceSlug);
   await addForm.locator('input[name="shortDescription"]').fill("Temporary browser test service.");
   await addForm.locator('input[name="description"]').fill("Created automatically by the browser test and archived at its end.");
   await addForm.getByRole("button", { name: /Add/ }).click();
-  let serviceRow = page.getByRole("row").filter({ hasText: "Browser QA Temporary Service" });
+  let serviceRow = page.getByRole("row").filter({ hasText: temporaryServiceName });
   await expect(serviceRow).toBeVisible();
   await serviceRow.getByRole("button", { name: "Edit" }).click();
   const editForm = page.locator("form.service-edit-form");
-  await editForm.getByLabel("Service name").fill("Browser QA Temporary Service Updated");
-  await editForm.getByLabel("Service URL slug").fill("browser-qa-temporary-service-updated");
+  const updatedServiceName = temporaryServiceName + " Updated";
+  await editForm.getByLabel("Service name").fill(updatedServiceName);
+  await editForm.getByLabel("Service URL slug").fill(temporaryServiceSlug + "-updated");
   await editForm.getByRole("button", { name: "Save changes" }).click();
-  serviceRow = page.getByRole("row").filter({ hasText: "Browser QA Temporary Service Updated" });
+  serviceRow = page.getByRole("row").filter({ hasText: updatedServiceName });
   await expect(serviceRow).toBeVisible();
   page.once("dialog", dialog => dialog.accept());
   await serviceRow.getByRole("button", { name: "Delete" }).click();
-  await expect(page.getByRole("row").filter({ hasText: "Browser QA Temporary Service Updated" })).toHaveCount(0);
+  await expect(page.getByRole("row").filter({ hasText: updatedServiceName })).toHaveCount(0);
 
   await page.locator(".site-header").getByRole("button", { name: "Sign out" }).click();
   await page.goto("/login");
