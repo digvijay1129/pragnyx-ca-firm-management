@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import { ArrowUpRight, Menu, X } from "lucide-react";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../../features/auth/context/AuthContext";
 import { firmContact } from "../lib/siteConfig";
 
 const navItems = [

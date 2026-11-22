@@ -21,25 +21,35 @@ A MERN-stack business website and client-management portal built against the Pra
 
 ## Repository structure
 
+The frontend is organised by business feature. Each area owns its pages and feature-specific components, while cross-feature UI and infrastructure live in `shared`.
+
 ```text
 client/
+  e2e/                         Playwright browser tests
   src/
-    components/   Shared layout, protected route, service and account forms
-    context/      Authentication state
-    lib/          Axios API client
-    pages/        Website, booking, client and admin pages
+    app/                       Application router and route composition
+    data/                      Static reference and fallback data
+    features/
+      admin/                   Admin dashboard and management tables
+      auth/                    Login, registration, auth context and auth shell
+      booking/                 Consultation booking workflow
+      client/                  Client portal, profile and service requests
+      public/                  Home, About, Services, Service Details, Contact
+    shared/
+      components/              Common sections, form fields, notices and status UI
+      layout/                  Site header, navigation and footer
+      lib/                     API client and firm configuration
+      pages/                   Shared fallback pages
+      routing/                 Protected-route rules
+    main.jsx                   Browser entry point and providers
+    styles.css                 Global design system and responsive styles
+  index.html
+  package.json
 server/
-  src/
-    config/       MongoDB connection
-    controllers/  REST endpoint handlers
-    middleware/   Authentication, authorization and error handling
-    models/       User, Service, Inquiry, Booking and ServiceRequest
-    routes/       API route definitions
-    scripts/      Database seed script
-docs/             Architecture notes, PDF compliance review and deployment checklist
-postman/          Importable Postman collection for API requests
-client/e2e/       Playwright browser end-to-end tests
-client/playwright.config.js  Chromium test runner configuration
+  src/                         Config, controllers, middleware, models, routes, scripts and utils
+docs/                          Architecture, assignment and deployment notes
+postman/                       Importable API collection
+.github/workflows/             CI build and integration tests
 ```
 
 ## Requirements

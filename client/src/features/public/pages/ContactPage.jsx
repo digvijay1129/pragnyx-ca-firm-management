@@ -1,0 +1,17 @@
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import { ArrowLeft, ArrowRight, ArrowUpRight, CheckCircle2, ShieldCheck } from "lucide-react";
+import api from "../../../shared/lib/api";
+import SectionTitle from "../../../shared/components/SectionTitle";
+import ServiceCard from "../components/ServiceCard";
+import { firmContact } from "../../../shared/lib/siteConfig";
+import { SERVICES } from "../../../data/services";
+import { pageTitle } from "../../../shared/components/PageBanner";
+import { Notice } from "../../../shared/components/feedback/Notice";
+import { Field, TextArea } from "../../../shared/components/forms/FormFields";
+
+export function ContactPage() {
+  const [busy,setBusy]=useState(false),[message,setMessage]=useState(""),[error,setError]=useState(false);
+  async function submit(e){e.preventDefault();const form=e.currentTarget;setBusy(true);setMessage("");setError(false);const f=new FormData(form);try{await api.post("/inquiries",{name:f.get("name"),email:f.get("email"),phone:f.get("phone"),subject:f.get("subject"),message:f.get("message")});setMessage("Thank you. Your inquiry has been received.");form.reset();}catch(err){setError(true);setMessage(err.userMessage||"Unable to submit your inquiry.");}finally{setBusy(false);}}
+  return <>{pageTitle("CONTACT","A good conversation can start here.","Tell us a little about what you need. Our team will be in touch.")}<section className="section-pad"><div className="container contact-grid"><div className="contact-copy"><span className="eyebrow">GET IN TOUCH</span><h2>Let's make things<br/><em>a little clearer.</em></h2><p>Whether you have a specific question or simply want to explore your options, we would be glad to hear from you.</p><div className="contact-method"><span>Email</span><a href={`mailto:${firmContact.email}`}>{firmContact.email}</a></div><div className="contact-method"><span>Phone</span><a href={`tel:${firmContact.phoneHref}`}>{firmContact.phone}</a></div><div className="contact-method"><span>Office hours</span><strong>{firmContact.hours}</strong></div></div><form className="form-card" onSubmit={submit}><h3>Send us a message</h3><p>Fields marked with * are required.</p><Notice message={message} error={error}/><div className="form-grid"><Field label="Full name *" name="name" required maxLength="100" placeholder="Your name"/><Field label="Email address *" name="email" type="email" required maxLength="180" placeholder="you@example.com"/><Field label="Phone number *" name="phone" type="tel" required maxLength="30" pattern="[+]?[0-9][0-9 ().-]{6,28}" title="Enter a valid phone number" placeholder="+91"/><Field label="Subject *" name="subject" required maxLength="160" placeholder="How can we help?"/></div><TextArea label="Message *" name="message" required maxLength="4000" placeholder="Tell us a little about your requirements…"/><button className="button button-dark button-full" disabled={busy}>{busy?"Sending…":"Send inquiry"} <ArrowUpRight size={16}/></button></form></div></section></>;
+}

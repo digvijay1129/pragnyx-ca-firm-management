@@ -1,8 +1,8 @@
 import { ArrowRight, ArrowUpRight, Check, LineChart, ShieldCheck, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import api from "../lib/api";
-import SectionTitle from "../components/SectionTitle";
+import api from "../../../shared/lib/api";
+import SectionTitle from "../../../shared/components/SectionTitle";
 import ServiceCard from "../components/ServiceCard";
 
 const defaults = [

@@ -1,0 +1,1 @@
+export const pageTitle = (eyebrow,title,copy) => <section className="page-banner"><div className="container"><span className="eyebrow">{eyebrow}</span><h1>{title}</h1>{copy && <p>{copy}</p>}</div></section>;
