@@ -54,7 +54,7 @@ The service seed script creates or updates all eight services. Service deletion 
 | MongoDB, Mongoose, schemas and data validation | `server/src/models`, `config/db.js` | Implemented; MongoDB 7 integration tests passed in CI |
 | Git and GitHub | Repository and `.github/workflows/ci.yml` | Implemented |
 | Postman for API testing | `postman/PragnyX_CA_Firm_Management.postman_collection.json`, executed with Newman in GitHub Actions | Newman CI verified: 26 requests, 34 assertions passed; manual Postman desktop import/run pending |
-| Browser end-to-end testing | `client/e2e/app.spec.js`, `client/playwright.config.js` | <badge color="success">CI verified: 2 scenarios passed</badge> |
+| Browser end-to-end testing | `client/e2e/app.spec.js`, `client/playwright.config.js` | CI verified: 2 scenarios passed |
 | Environment variables | `server/.env.example`, `client/.env.example` | Implemented |
 | Deployment platform | Hosting configuration and owner connections | Deployment pending |
 
