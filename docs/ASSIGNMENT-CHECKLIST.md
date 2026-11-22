@@ -9,10 +9,10 @@ This status review follows the supplied seven-page PragnyX MERN Stack Full Stack
 | Home page: logo, navigation, hero, about, services, why choose us, testimonials, contact and social footer | `client/src/pages/HomePage.jsx`, `client/src/components/Layout.jsx` | Implemented; sample copy/contact details need owner approval |
 | Services page: all eight CA services, title, description, icon and detail page | `client/src/pages/Pages.jsx`, `client/src/components/ServiceCard.jsx`, `server/src/scripts/seed.js` | Implemented; service endpoints integration-tested |
 | Registration, login, bcrypt hashing, JWT, logout, protected routes and profile | `AuthContext.jsx`, `authController.js`, `User.js`, `ProtectedRoute.jsx` | Implemented; core API flows CI verified |
-| Client dashboard: profile, explore services, service requests, inquiry history, consultation booking and status | `ClientDashboardPage`, `ProfileForm.jsx`, `ServiceRequestForm.jsx` | Implemented; API flows CI verified; browser workflow manual pending |
+| Client dashboard: profile, explore services, service requests, inquiry history, consultation booking and status | `ClientDashboardPage`, `ProfileForm.jsx`, `ServiceRequestForm.jsx`, Playwright E2E | Implemented; API and browser workflows CI verified |
 | Consultation fields and MongoDB persistence; reject invalid/past dates; status and admin actions | `BookingPage`, `bookingController.js`, `Booking.js` | Implemented; real-calendar, past-date, persistence and status API paths CI verified |
-| Admin authentication, statistics, clients, service CRUD, inquiries, bookings and role protection | `AdminDashboardPage`, `adminController.js`, protected API routes | Implemented; API flows CI verified; browser workflow manual pending |
-| Contact form fields; public inquiry persistence and admin management | `ContactPage`, `inquiryController.js`, `Inquiry.js` | Implemented; anonymous and signed-in API coverage CI verified |
+| Admin authentication, statistics, clients, service CRUD, inquiries, bookings and role protection | `AdminDashboardPage`, `adminController.js`, protected API routes, Playwright E2E | Implemented; API and browser workflows CI verified |
+| Contact form fields; public inquiry persistence and admin management | `ContactPage`, `inquiryController.js`, `Inquiry.js`, Playwright E2E | Implemented; anonymous and signed-in API coverage and browser form submission CI verified |
 
 ### Services required by the PDF
 
@@ -54,7 +54,7 @@ The service seed script creates or updates all eight services. Service deletion 
 | MongoDB, Mongoose, schemas and data validation | `server/src/models`, `config/db.js` | Implemented; MongoDB 7 integration tests passed in CI |
 | Git and GitHub | Repository and `.github/workflows/ci.yml` | Implemented |
 | Postman for API testing | `postman/PragnyX_CA_Firm_Management.postman_collection.json`, executed with Newman in GitHub Actions | Newman CI verified: 26 requests, 34 assertions passed; manual Postman desktop import/run pending |
-| Browser end-to-end testing | `client/e2e/app.spec.js`, `client/playwright.config.js` | Playwright suite added to CI; latest browser result pending |
+| Browser end-to-end testing | `client/e2e/app.spec.js`, `client/playwright.config.js` | <badge color="success">CI verified: 2 scenarios passed</badge> |
 | Environment variables | `server/.env.example`, `client/.env.example` | Implemented |
 | Deployment platform | Hosting configuration and owner connections | Deployment pending |
 
@@ -82,7 +82,7 @@ These automated checks do not replace manual browser tests, a Postman run, or a 
 | Backend API URL | Pending deployment |
 | README setup instructions | Present in `README.md` |
 | Database schema explanation | Present in `docs/ARCHITECTURE.md` |
-| Screenshots of major modules | Pending capture from a running application |
+| Screenshots of major modules | Captured in the Playwright artifact for Home, About, Services/mobile, Service Details, Contact, Client Dashboard, Admin Dashboard and post-admin client status; final selection for submission pending |
 | Admin and client test login credentials | Must be created privately after database setup; do not commit credentials |
 
 ## 6. Evaluation areas and evidence
