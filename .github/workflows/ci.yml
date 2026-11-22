@@ -107,8 +107,8 @@ jobs:
           npx --yes newman@6 run ../postman/PragnyX_CA_Firm_Management.postman_collection.json \
             --reporters cli,junit \
             --reporter-junit-export newman-report.xml \
-            --env-var "baseUrl=http://127.0.0.1:5000/api" \
-            --env-var "serverUrl=http://127.0.0.1:5000" \
+            --env-var "apiHost=127.0.0.1" \
+            --env-var "apiPort=5000" \
             --env-var "clientName=PragnyX CI Client" \
             --env-var "clientEmail=$POSTMAN_CLIENT_EMAIL" \
             --env-var "clientPhone=+91 98765 43210" \
