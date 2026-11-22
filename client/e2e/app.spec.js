@@ -63,7 +63,7 @@ test("client and administrator business workflows", async ({ page }, testInfo) =
   await capture(page, "client-dashboard");
 
   const requestForm = page.locator(".request-form");
-  await expect(requestForm.locator('select[name="service"] option')).toContainText("Income Tax Filing");
+  await expect(requestForm.locator('select[name="service"]')).toContainText("Income Tax Filing");
   await requestForm.locator('select[name="service"]').selectOption({ label: "Income Tax Filing" });
   await requestForm.locator('textarea[name="details"]').fill("Please help me file my income tax return.");
   await requestForm.getByRole("button", { name: /Submit request/ }).click();
@@ -85,7 +85,7 @@ test("client and administrator business workflows", async ({ page }, testInfo) =
 
   await page.goto("/booking");
   const bookingForm = page.locator("form.form-card");
-  await expect(bookingForm.locator('select[name="service"] option')).toContainText("Income Tax Filing");
+  await expect(bookingForm.locator('select[name="service"]')).toContainText("Income Tax Filing");
   const date = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
   await bookingForm.locator('input[name="name"]').fill("Browser QA Client Updated");
   await bookingForm.locator('input[name="email"]').fill(email);
