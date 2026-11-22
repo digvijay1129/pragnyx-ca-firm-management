@@ -26,7 +26,7 @@ Import `postman/PragnyX_CA_Firm_Management.postman_collection.json` into Postman
 
 ## Automated browser end-to-end tests
 
-<badge>CI passed: 2 scenarios</badge>
+**CI verified: 2 Playwright scenarios passed.**
 
 The latest successful [GitHub Actions run](https://github.com/digvijay1129/pragnyx-ca-firm-management/actions/runs/44986474929) completed both Playwright tests. The report artifact contains eight screenshots covering Home, About, Services on mobile, Service Details, Contact, Client Dashboard, Admin Dashboard and the client workspace after administrator updates.
 
