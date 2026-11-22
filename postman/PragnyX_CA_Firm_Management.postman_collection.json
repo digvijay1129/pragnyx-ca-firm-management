@@ -2,7 +2,7 @@
   "info": {
     "_postman_id": "7f8fa3ec-8475-4d23-b3d2-7a8c12a0f015",
     "name": "PragnyX CA Firm Management API",
-    "description": "Postman collection mapped to the PragnyX MERN assignment. Start the Express API and MongoDB first. Register a client and seed an administrator using private environment variables. Set preferredDate to a future YYYY-MM-DD date and selectedService to an active service name. Do not use the test database or sample passwords for production. All requests include expected HTTP status assertions and can be executed with Newman in sequence.",
+    "description": "Postman collection mapped to the PragnyX MERN assignment. Start the Express API and MongoDB first. Register a client and seed an administrator using private environment variables. Set preferredDate to a future YYYY-MM-DD date and selectedService to an active service name. Do not use the test database or sample passwords for production. All requests include expected HTTP status assertions and can be executed with Newman in sequence. API host and port are configurable using apiHost and apiPort collection variables.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
@@ -15,7 +15,15 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{serverUrl}}/health"
+              "raw": "http://{{apiHost}}:{{apiPort}}/health",
+              "protocol": "http",
+              "host": [
+                "{{apiHost}}"
+              ],
+              "port": "{{apiPort}}",
+              "path": [
+                "health"
+              ]
             }
           },
           "event": [
@@ -36,7 +44,16 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/services"
+              "raw": "http://{{apiHost}}:{{apiPort}}/api/services",
+              "protocol": "http",
+              "host": [
+                "{{apiHost}}"
+              ],
+              "port": "{{apiPort}}",
+              "path": [
+                "api",
+                "services"
+              ]
             }
           },
           "event": [
@@ -57,7 +74,17 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/services/{{serviceSlug}}"
+              "raw": "http://{{apiHost}}:{{apiPort}}/api/services/{{serviceSlug}}",
+              "protocol": "http",
+              "host": [
+                "{{apiHost}}"
+              ],
+              "port": "{{apiPort}}",
+              "path": [
+                "api",
+                "services",
+                "{{serviceSlug}}"
+              ]
             }
           },
           "event": [
@@ -88,7 +115,17 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/auth/register"
+              "raw": "http://{{apiHost}}:{{apiPort}}/api/auth/register",
+              "protocol": "http",
+              "host": [
+                "{{apiHost}}"
+              ],
+              "port": "{{apiPort}}",
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
             },
             "body": {
               "mode": "raw",
@@ -127,7 +164,17 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/auth/login"
+              "raw": "http://{{apiHost}}:{{apiPort}}/api/auth/login",
+              "protocol": "http",
+              "host": [
+                "{{apiHost}}"
+              ],
+              "port": "{{apiPort}}",
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
             },
             "body": {
               "mode": "raw",
@@ -164,7 +211,17 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/auth/login"
+              "raw": "http://{{apiHost}}:{{apiPort}}/api/auth/login",
+              "protocol": "http",
+              "host": [
+                "{{apiHost}}"
+              ],
+              "port": "{{apiPort}}",
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
             },
             "body": {
               "mode": "raw",
@@ -206,7 +263,17 @@
               ]
             },
             "url": {
-              "raw": "{{baseUrl}}/auth/me"
+              "raw": "http://{{apiHost}}:{{apiPort}}/api/auth/me",
+              "protocol": "http",
+              "host": [
+                "{{apiHost}}"
+              ],
+              "port": "{{apiPort}}",
+              "path": [
+                "api",
+                "auth",
+                "me"
+              ]
             }
           },
           "event": [
@@ -242,7 +309,17 @@
               ]
             },
             "url": {
-              "raw": "{{baseUrl}}/auth/profile"
+              "raw": "http://{{apiHost}}:{{apiPort}}/api/auth/profile",
+              "protocol": "http",
+              "host": [
+                "{{apiHost}}"
+              ],
+              "port": "{{apiPort}}",
+              "path": [
+                "api",
+                "auth",
+                "profile"
+              ]
             },
             "body": {
               "mode": "raw",
@@ -282,7 +359,16 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/inquiries"
+              "raw": "http://{{apiHost}}:{{apiPort}}/api/inquiries",
+              "protocol": "http",
+              "host": [
+                "{{apiHost}}"
+              ],
+              "port": "{{apiPort}}",
+              "path": [
+                "api",
+                "inquiries"
+              ]
             },
             "body": {
               "mode": "raw",
@@ -329,7 +415,16 @@
               ]
             },
             "url": {
-              "raw": "{{baseUrl}}/inquiries"
+              "raw": "http://{{apiHost}}:{{apiPort}}/api/inquiries",
+              "protocol": "http",
+              "host": [
+                "{{apiHost}}"
+              ],
+              "port": "{{apiPort}}",
+              "path": [
+                "api",
+                "inquiries"
+              ]
             },
             "body": {
               "mode": "raw",
@@ -371,7 +466,17 @@
               ]
             },
             "url": {
-              "raw": "{{baseUrl}}/inquiries/mine"
+              "raw": "http://{{apiHost}}:{{apiPort}}/api/inquiries/mine",
+              "protocol": "http",
+              "host": [
+                "{{apiHost}}"
+              ],
+              "port": "{{apiPort}}",
+              "path": [
+                "api",
+                "inquiries",
+                "mine"
+              ]
             }
           },
           "event": [
@@ -402,7 +507,16 @@
               ]
             },
             "url": {
-              "raw": "{{baseUrl}}/inquiries"
+              "raw": "http://{{apiHost}}:{{apiPort}}/api/inquiries",
+              "protocol": "http",
+              "host": [
+                "{{apiHost}}"
+              ],
+              "port": "{{apiPort}}",
+              "path": [
+                "api",
+                "inquiries"
+              ]
             }
           },
           "event": [
@@ -438,7 +552,18 @@
               ]
             },
             "url": {
-              "raw": "{{baseUrl}}/inquiries/{{inquiryId}}/status"
+              "raw": "http://{{apiHost}}:{{apiPort}}/api/inquiries/{{inquiryId}}/status",
+              "protocol": "http",
+              "host": [
+                "{{apiHost}}"
+              ],
+              "port": "{{apiPort}}",
+              "path": [
+                "api",
+                "inquiries",
+                "{{inquiryId}}",
+                "status"
+              ]
             },
             "body": {
               "mode": "raw",
@@ -488,7 +613,16 @@
               ]
             },
             "url": {
-              "raw": "{{baseUrl}}/bookings"
+              "raw": "http://{{apiHost}}:{{apiPort}}/api/bookings",
+              "protocol": "http",
+              "host": [
+                "{{apiHost}}"
+              ],
+              "port": "{{apiPort}}",
+              "path": [
+                "api",
+                "bookings"
+              ]
             },
             "body": {
               "mode": "raw",
@@ -530,7 +664,17 @@
               ]
             },
             "url": {
-              "raw": "{{baseUrl}}/bookings/mine"
+              "raw": "http://{{apiHost}}:{{apiPort}}/api/bookings/mine",
+              "protocol": "http",
+              "host": [
+                "{{apiHost}}"
+              ],
+              "port": "{{apiPort}}",
+              "path": [
+                "api",
+                "bookings",
+                "mine"
+              ]
             }
           },
           "event": [
@@ -566,7 +710,16 @@
               ]
             },
             "url": {
-              "raw": "{{baseUrl}}/service-requests"
+              "raw": "http://{{apiHost}}:{{apiPort}}/api/service-requests",
+              "protocol": "http",
+              "host": [
+                "{{apiHost}}"
+              ],
+              "port": "{{apiPort}}",
+              "path": [
+                "api",
+                "service-requests"
+              ]
             },
             "body": {
               "mode": "raw",
@@ -608,7 +761,17 @@
               ]
             },
             "url": {
-              "raw": "{{baseUrl}}/service-requests/mine"
+              "raw": "http://{{apiHost}}:{{apiPort}}/api/service-requests/mine",
+              "protocol": "http",
+              "host": [
+                "{{apiHost}}"
+              ],
+              "port": "{{apiPort}}",
+              "path": [
+                "api",
+                "service-requests",
+                "mine"
+              ]
             }
           },
           "event": [
@@ -644,7 +807,17 @@
               ]
             },
             "url": {
-              "raw": "{{baseUrl}}/admin/stats"
+              "raw": "http://{{apiHost}}:{{apiPort}}/api/admin/stats",
+              "protocol": "http",
+              "host": [
+                "{{apiHost}}"
+              ],
+              "port": "{{apiPort}}",
+              "path": [
+                "api",
+                "admin",
+                "stats"
+              ]
             }
           },
           "event": [
@@ -675,7 +848,17 @@
               ]
             },
             "url": {
-              "raw": "{{baseUrl}}/admin/clients"
+              "raw": "http://{{apiHost}}:{{apiPort}}/api/admin/clients",
+              "protocol": "http",
+              "host": [
+                "{{apiHost}}"
+              ],
+              "port": "{{apiPort}}",
+              "path": [
+                "api",
+                "admin",
+                "clients"
+              ]
             }
           },
           "event": [
@@ -706,7 +889,16 @@
               ]
             },
             "url": {
-              "raw": "{{baseUrl}}/bookings"
+              "raw": "http://{{apiHost}}:{{apiPort}}/api/bookings",
+              "protocol": "http",
+              "host": [
+                "{{apiHost}}"
+              ],
+              "port": "{{apiPort}}",
+              "path": [
+                "api",
+                "bookings"
+              ]
             }
           },
           "event": [
@@ -742,7 +934,18 @@
               ]
             },
             "url": {
-              "raw": "{{baseUrl}}/bookings/{{bookingId}}/status"
+              "raw": "http://{{apiHost}}:{{apiPort}}/api/bookings/{{bookingId}}/status",
+              "protocol": "http",
+              "host": [
+                "{{apiHost}}"
+              ],
+              "port": "{{apiPort}}",
+              "path": [
+                "api",
+                "bookings",
+                "{{bookingId}}",
+                "status"
+              ]
             },
             "body": {
               "mode": "raw",
@@ -782,7 +985,16 @@
               ]
             },
             "url": {
-              "raw": "{{baseUrl}}/service-requests"
+              "raw": "http://{{apiHost}}:{{apiPort}}/api/service-requests",
+              "protocol": "http",
+              "host": [
+                "{{apiHost}}"
+              ],
+              "port": "{{apiPort}}",
+              "path": [
+                "api",
+                "service-requests"
+              ]
             }
           },
           "event": [
@@ -818,7 +1030,18 @@
               ]
             },
             "url": {
-              "raw": "{{baseUrl}}/service-requests/{{serviceRequestId}}/status"
+              "raw": "http://{{apiHost}}:{{apiPort}}/api/service-requests/{{serviceRequestId}}/status",
+              "protocol": "http",
+              "host": [
+                "{{apiHost}}"
+              ],
+              "port": "{{apiPort}}",
+              "path": [
+                "api",
+                "service-requests",
+                "{{serviceRequestId}}",
+                "status"
+              ]
             },
             "body": {
               "mode": "raw",
@@ -863,7 +1086,16 @@
               ]
             },
             "url": {
-              "raw": "{{baseUrl}}/services"
+              "raw": "http://{{apiHost}}:{{apiPort}}/api/services",
+              "protocol": "http",
+              "host": [
+                "{{apiHost}}"
+              ],
+              "port": "{{apiPort}}",
+              "path": [
+                "api",
+                "services"
+              ]
             },
             "body": {
               "mode": "raw",
@@ -911,7 +1143,17 @@
               ]
             },
             "url": {
-              "raw": "{{baseUrl}}/services/{{serviceId}}"
+              "raw": "http://{{apiHost}}:{{apiPort}}/api/services/{{serviceId}}",
+              "protocol": "http",
+              "host": [
+                "{{apiHost}}"
+              ],
+              "port": "{{apiPort}}",
+              "path": [
+                "api",
+                "services",
+                "{{serviceId}}"
+              ]
             },
             "body": {
               "mode": "raw",
@@ -951,7 +1193,17 @@
               ]
             },
             "url": {
-              "raw": "{{baseUrl}}/services/{{serviceId}}"
+              "raw": "http://{{apiHost}}:{{apiPort}}/api/services/{{serviceId}}",
+              "protocol": "http",
+              "host": [
+                "{{apiHost}}"
+              ],
+              "port": "{{apiPort}}",
+              "path": [
+                "api",
+                "services",
+                "{{serviceId}}"
+              ]
             }
           },
           "event": [
@@ -970,10 +1222,6 @@
     }
   ],
   "variable": [
-    {
-      "key": "baseUrl",
-      "value": "http://localhost:5000/api"
-    },
     {
       "key": "clientName",
       "value": "Demo Client"
@@ -1039,12 +1287,16 @@
       "value": ""
     },
     {
-      "key": "serverUrl",
-      "value": "http://localhost:5000"
-    },
-    {
       "key": "publicInquiryId",
       "value": ""
+    },
+    {
+      "key": "apiHost",
+      "value": "127.0.0.1"
+    },
+    {
+      "key": "apiPort",
+      "value": "5000"
     }
   ]
 }
