@@ -14,6 +14,11 @@ export const createInquiry = asyncHandler(async (req, res) => {
   res.status(201).json({ success: true, inquiry });
 });
 
+export const listMyInquiries = asyncHandler(async (req, res) => {
+  const inquiries = await Inquiry.find({ user: req.user._id }).sort({ createdAt: -1 });
+  res.json({ success: true, inquiries });
+});
+
 export const listInquiries = asyncHandler(async (_req, res) => {
   const inquiries = await Inquiry.find().sort({ createdAt: -1 }).limit(500);
   res.json({ success: true, inquiries });
