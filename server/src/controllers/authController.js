@@ -26,6 +26,8 @@ export const register = asyncHandler(async (req, res) => {
   }
   if (typeof phone !== "string" || (phone !== "" && !isValidPhone(phone))) throw new HttpError(400, "Enter a valid phone number.");
 
+  if (!process.env.JWT_SECRET) throw new HttpError(500, "Authentication is not configured. Contact the administrator.");
+
   const normalizedEmail = email.trim().toLowerCase();
   const user = await User.create({
     name: name.trim(),
@@ -38,9 +40,10 @@ export const register = asyncHandler(async (req, res) => {
 
 export const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body || {};
-  if (!isValidEmail(email) || typeof password !== "string" || password.length === 0) {
-    throw new HttpError(400, "Enter a valid email address and password.");
+  if (!isValidEmail(email) || typeof password !== "string" || password.length === 0 || Buffer.byteLength(password, "utf8") > 72) {
+    throw new HttpError(400, "Enter a valid email address and a password of no more than 72 UTF-8 bytes.");
   }
+  if (!process.env.JWT_SECRET) throw new HttpError(500, "Authentication is not configured. Contact the administrator.");
   const user = await User.findOne({ email: email.trim().toLowerCase() }).select("+password");
   if (!user || !user.isActive || !(await user.comparePassword(password))) {
     throw new HttpError(401, "Email or password is incorrect.");
