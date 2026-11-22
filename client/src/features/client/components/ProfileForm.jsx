@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { CheckCircle2, Save } from "lucide-react";
-import { useAuth } from "../context/AuthContext";
-import api from "../lib/api";
+import { useAuth } from "../../auth/context/AuthContext";
+import api from "../../../shared/lib/api";
 
 export default function ProfileForm() {
   const {user,refreshUser}=useAuth();
