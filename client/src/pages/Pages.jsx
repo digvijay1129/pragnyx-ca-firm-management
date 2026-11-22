@@ -116,7 +116,7 @@ export function BookingPage(){
     }
   }
 
-  const minDate=new Date(Date.now()-new Date().getTimezoneOffset()*60000).toISOString().slice(0,10);
+  const minDate=new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Kolkata"}).format(new Date());
   return <>{pageTitle("CONSULTATION","Let's find a time to talk.","Share your requirements and your preferred time. Consultation requests are reviewed by our team.")}<section className="section-pad"><div className="container booking-grid"><div><span className="eyebrow">A FIRST CONVERSATION</span><h2>Start with what<br/><em>matters to you.</em></h2><p>Choose a service and a preferred time. Our team will review your request and update its status in your client dashboard.</p><div className="booking-assurance"><CalendarDays/><span>Choose a future date. Your booking remains pending until confirmed by the team.</span></div><p className="muted-small">{user?"You are signed in as "+user.email:"You'll be asked to sign in before submitting the request."}</p></div><form className="form-card" onSubmit={submit}><h3>Request a consultation</h3><Notice message={message} error={error}/>{servicesError&&<div className="notice notice-error" role="alert">{servicesError} <button type="button" className="text-link" onClick={loadServices}>Retry</button></div>}{!servicesLoading&&!servicesError&&services.length===0&&<Notice message="No services are currently available for booking. Please contact the firm." error/>}<div className="form-grid"><Field label="Client name *" name="name" required maxLength="100" defaultValue={user?.name||""} placeholder="Your name"/><Field label="Email address *" name="email" type="email" required maxLength="180" defaultValue={user?.email||""} placeholder="you@example.com"/><Field label="Phone number *" name="phone" type="tel" required maxLength="30" pattern="[+]?[0-9][0-9 ().-]{6,28}" title="Enter a valid phone number" defaultValue={user?.phone||""} placeholder="+91"/><SelectField label="Required service *" name="service" required disabled={servicesLoading||services.length===0} defaultValue={qs.get("service")||""}><option value="">{servicesLoading?"Loading services…":services.length?"Select a service":"No services available"}</option>{services.map(s=><option key={s._id||s.slug} value={s.name||s.title}>{s.name||s.title}</option>)}</SelectField><Field label="Preferred date *" name="date" type="date" required min={minDate}/><SelectField label="Preferred time *" name="time" required defaultValue=""><option value="">Select a time</option>{["09:30","10:30","11:30","12:30","14:00","15:00","16:00","17:00"].map(t=><option key={t} value={t}>{t}</option>)}</SelectField></div><TextArea label="Additional message" name="message" maxLength="2000" placeholder="Anything we should know before we speak?"/><button className="button button-dark button-full" disabled={busy||servicesLoading||services.length===0}>{busy?"Submitting…":"Submit booking request"} <ArrowUpRight size={16}/></button><small className="form-privacy">Your details are used to respond to this consultation request.</small></form></div></section></>;
 }
 
@@ -213,11 +213,11 @@ export function AdminDashboardPage(){
   }
 
   async function archiveService(id){
-    if(!window.confirm("Archive this service? It will no longer appear in the public service list."))return;
+    if(!window.confirm("Delete this service from the public catalogue? Existing bookings and service requests will be retained. The record will be archived rather than permanently erased."))return;
     setBusyAction(`service:${id}`);setError("");setNotice("");
     try{
       await api.delete(`/services/${id}`);
-      setNotice("Service archived. Existing bookings and requests are retained.");
+      setNotice("Service deleted from the public catalogue. Existing bookings and requests are retained.");
       await load(true);
     }catch(err){setError(err.userMessage||"Could not archive service.");}
     finally{setBusyAction("");}
@@ -312,7 +312,7 @@ export function AdminDashboardPage(){
           </form>}
           <DataTable headers={["Service","Slug","Description","Action"]} rows={services.map(service=>{
             const key="service:"+service._id;
-            return [<strong>{service.name}</strong>,service.slug,<span className="table-message" title={service.shortDescription||service.description}>{service.shortDescription||service.description}</span>,<div className="table-actions"><button type="button" className="table-edit" disabled={Boolean(busyAction)||Boolean(editingService)} onClick={()=>editService(service)}>Edit</button><button type="button" className="table-delete" disabled={Boolean(busyAction)||Boolean(editingService)} onClick={()=>archiveService(service._id)}>Archive</button></div>];
+            return [<strong>{service.name}</strong>,service.slug,<span className="table-message" title={service.shortDescription||service.description}>{service.shortDescription||service.description}</span>,<div className="table-actions"><button type="button" className="table-edit" disabled={Boolean(busyAction)||Boolean(editingService)} onClick={()=>editService(service)}>Edit</button><button type="button" className="table-delete" disabled={Boolean(busyAction)||Boolean(editingService)} onClick={()=>archiveService(service._id)}>Delete</button></div>];
           })}/>
         </>}
       </section>
