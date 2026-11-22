@@ -90,3 +90,50 @@ body { background: var(--paper); color: var(--ink); line-height: 1.55; }
 @media(max-width:800px){.site-header{height:72px}.topline-inner{height:32px}.hero{padding-top:54px}.hero-grid{gap:28px}.portal-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.portal-columns{grid-template-columns:1fr}.portal-columns>:last-child:nth-child(odd){grid-column:auto}}
 @media(max-width:600px){.container{width:min(100% - 32px,1160px)}.main-nav{border-radius:0 0 16px 16px}.hero h1{font-size:clamp(44px,12vw,60px)}.hero-art{padding-left:12px;padding-right:4px}.hero-stamp{left:-5px}.floating-note{right:-2px}.hero-bottom{flex-wrap:wrap;gap:10px;font-size:7px}.service-grid,.service-grid-all{grid-template-columns:1fr}.service-card{min-height:0}.section-head-row,.cta-inner,.portal-heading{align-items:flex-start;flex-direction:column}.intro-grid{grid-template-columns:1fr;gap:26px}.form-card{padding:22px 18px}.form-grid{grid-template-columns:1fr}.portal-stats{grid-template-columns:1fr 1fr;gap:9px}.stat-card{padding:14px}.footer-grid{grid-template-columns:1fr 1fr;gap:28px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}}
+
+
+/* Explicit demo identity and non-operational contact treatment */
+.brand-demo-label {
+  display: inline-flex;
+  align-self: flex-start;
+  margin-top: 2px;
+  padding: 3px 6px;
+  border-radius: 999px;
+  background: rgba(184,140,74,.16);
+  color: #8d6a34;
+  font-size: 7px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: .13em;
+}
+.brand-light .brand-demo-label { background: rgba(227,200,148,.14); color: #e3c894; }
+.demo-topline-label {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid rgba(227,200,148,.38);
+  border-radius: 999px;
+  padding: 4px 7px;
+  color: #e3c894;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: .1em;
+}
+.demo-notice,.demo-form-note {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 13px 15px;
+  border: 1px solid #ead8b7;
+  border-radius: 12px;
+  background: #fbf5e9;
+  color: #765a30;
+  font-size: 10px;
+  line-height: 1.65;
+}
+.demo-notice { flex-direction: column; margin: 20px 0 12px; }
+.demo-notice strong { font-size: 8px; letter-spacing: .14em; }
+.demo-form-note { margin: 0 0 18px; }
+@media(max-width:700px) {
+  .demo-topline-label { display: none; }
+  .brand-demo-label { font-size: 6px; }
+}

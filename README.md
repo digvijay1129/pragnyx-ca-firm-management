@@ -19,6 +19,23 @@ A MERN-stack business website and client-management portal built against the Pra
 **Backend:** Node.js, Express, Mongoose, JWT, bcryptjs, Helmet, CORS.  
 **Database:** MongoDB.
 
+## Demo brand and sample contact details
+
+PragnyX is a fictional accountancy and advisory brand created only for this technical assignment. It is not a registered CA firm, real professional practice or physical office. The site visibly labels itself as a demo while `VITE_DEMO_MODE=true`.
+
+| Brand/contact item | Assignment sample |
+|---|---|
+| Brand | PragnyX |
+| Descriptor | Accountancy & Advisory |
+| Tagline | Clarity in every number. Confidence in every decision. |
+| Email | `hello@pragnyx.example` (non-deliverable example address) |
+| Phone | `+91 00000 00000` (placeholder; not callable) |
+| Office hours | Monday-Friday, 9:30 AM-6:30 PM (sample hours) |
+| Location | Demo location - India (no physical office) |
+| Social profiles | LinkedIn and Instagram platform links are placeholders, not company profiles |
+
+Demo contact values are intentionally non-operational. The Contact and Consultation forms explain that submissions are saved in the assignment database and are not delivered to a real firm. Keep demo mode enabled for assignment review. Only turn it off after replacing every sample contact/social value with details authorised for a real business.
+
 ## Repository structure
 
 The frontend is organised by business feature. Each area owns its pages and feature-specific components, while cross-feature UI and infrastructure live in `shared`.
@@ -105,12 +122,13 @@ Copy `.env.example` to `.env`:
 
 ```env
 VITE_API_BASE_URL=http://localhost:5000/api
-VITE_LINKEDIN_URL=https://www.linkedin.com/company/your-firm
-VITE_INSTAGRAM_URL=https://www.instagram.com/your-firm
-VITE_FIRM_EMAIL=hello@your-domain.example
-VITE_FIRM_PHONE=+91 12345 67890
-VITE_FIRM_HOURS=Monday-Friday, 9:30 AM-6:30 PM
-VITE_FIRM_LOCATION=Your city, India
+VITE_DEMO_MODE=true
+VITE_LINKEDIN_URL=https://www.linkedin.com/
+VITE_INSTAGRAM_URL=https://www.instagram.com/
+VITE_FIRM_EMAIL=hello@pragnyx.example
+VITE_FIRM_PHONE=+91 00000 00000
+VITE_FIRM_HOURS=Monday-Friday, 9:30 AM-6:30 PM (sample hours)
+VITE_FIRM_LOCATION=Demo location - India (no physical office)
 ```
 
 Start the frontend:
@@ -218,7 +236,7 @@ Deployment requires accounts and credentials that must be supplied by the projec
 1. Create a MongoDB Atlas database and a database user. Restrict network access to the deployed API service where practical.
 2. Deploy the Node.js API from the `server` directory. Set `NODE_ENV=production`, `PORT` (provided by the host), `MONGODB_URI`, a long random `JWT_SECRET`, `JWT_EXPIRES_IN=1d`, and the exact frontend origin in `CLIENT_URL`.
 3. Run `npm run seed` once against the production database. Set `ADMIN_NAME`, `ADMIN_EMAIL` and a unique `ADMIN_PASSWORD` of at least 12 characters for the first administrator. Run this command only against the intended database.
-4. Deploy the static frontend from the `client` directory with build command `npm install && npm run build` and publish directory `dist`. Set `VITE_API_BASE_URL` to the deployed API's `/api` URL. Set the firm's real LinkedIn and Instagram URLs, public email, phone, office hours and location.
+4. Deploy the static frontend from the `client` directory with build command `npm install && npm run build` and publish directory `dist`. Set `VITE_API_BASE_URL` to the deployed API's `/api` URL. Keep `VITE_DEMO_MODE=true` for this assignment version. Do not present the sample contact details as real. Only set `VITE_DEMO_MODE=false` after replacing the sample email, phone, hours, location and social URLs with details authorised by the actual firm.
 5. Configure SPA fallback rewrites to `/index.html`, update the API CORS origin to the actual frontend domain, and verify the public `/health` endpoint.
 6. Perform the manual smoke-test checklist in `docs/TESTING-AND-DEPLOYMENT.md` and record the final frontend URL, API URL, and separately shared test credentials.
 
@@ -226,7 +244,7 @@ Do not commit production secrets or real administrator credentials. The reposito
 
 ## Assignment reference
 
-See [docs/ASSIGNMENT-CHECKLIST.md](docs/ASSIGNMENT-CHECKLIST.md) for the feature checklist and [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the collection schema, relationships, indexes, validation rules and complete API route map. The project should be evaluated against the supplied PragnyX assignment PDF; sample website copy and contact details are placeholders; configure the VITE_FIRM_* and VITE_LINKEDIN_URL/VITE_INSTAGRAM_URL values with approved firm details before submission or public use.
+See [docs/ASSIGNMENT-CHECKLIST.md](docs/ASSIGNMENT-CHECKLIST.md) for the feature checklist and [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the collection schema, relationships, indexes, validation rules and complete API route map. The project should be evaluated against the supplied PragnyX assignment PDF; PragnyX is a fictional demo brand and its clearly labelled contact/social details are non-operational samples. Keep demo mode enabled for assignment review.
 
 ## Branch policy
 
