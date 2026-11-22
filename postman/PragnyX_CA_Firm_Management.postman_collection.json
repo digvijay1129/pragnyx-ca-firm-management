@@ -45,18 +45,6 @@
       "name": "Authentication",
       "item": [
         {
-          "0": {
-            "listen": "test",
-            "script": {
-              "type": "text/javascript",
-              "exec": [
-                "pm.test('Client registration returns 201', () => pm.response.to.have.status(201));",
-                "const data = pm.response.json();",
-                "pm.collectionVariables.set('clientToken', data.token);",
-                "pm.collectionVariables.set('clientId', data.user.id);"
-              ]
-            }
-          },
           "name": "Register client",
           "request": {
             "method": "POST",
@@ -78,19 +66,23 @@
                 }
               }
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Client registration returns 201', () => pm.response.to.have.status(201));",
+                  "const data = pm.response.json();",
+                  "pm.collectionVariables.set('clientToken', data.token);",
+                  "pm.collectionVariables.set('clientId', data.user.id);"
+                ]
+              }
+            }
+          ]
         },
         {
-          "0": {
-            "listen": "test",
-            "script": {
-              "type": "text/javascript",
-              "exec": [
-                "pm.test('Client login returns 200', () => pm.response.to.have.status(200));",
-                "pm.collectionVariables.set('clientToken', pm.response.json().token);"
-              ]
-            }
-          },
           "name": "Login client",
           "request": {
             "method": "POST",
@@ -112,19 +104,21 @@
                 }
               }
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Client login returns 200', () => pm.response.to.have.status(200));",
+                  "pm.collectionVariables.set('clientToken', pm.response.json().token);"
+                ]
+              }
+            }
+          ]
         },
         {
-          "0": {
-            "listen": "test",
-            "script": {
-              "type": "text/javascript",
-              "exec": [
-                "pm.test('Admin login returns 200', () => pm.response.to.have.status(200));",
-                "pm.collectionVariables.set('adminToken', pm.response.json().token);"
-              ]
-            }
-          },
           "name": "Login administrator",
           "request": {
             "method": "POST",
@@ -146,7 +140,19 @@
                 }
               }
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Admin login returns 200', () => pm.response.to.have.status(200));",
+                  "pm.collectionVariables.set('adminToken', pm.response.json().token);"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Get current user",
