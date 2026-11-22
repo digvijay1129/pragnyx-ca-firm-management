@@ -15,7 +15,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/../health"
+              "raw": "{{serverUrl}}/health"
             }
           }
         },
@@ -229,7 +229,19 @@
                 }
               }
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Public inquiry accepted', () => pm.response.to.have.status(201));",
+                  "pm.collectionVariables.set('publicInquiryId', pm.response.json().inquiry._id);"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Submit signed-in inquiry",
@@ -263,7 +275,19 @@
                 }
               }
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Client inquiry accepted', () => pm.response.to.have.status(201));",
+                  "pm.collectionVariables.set('inquiryId', pm.response.json().inquiry._id);"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "List my inquiries",
@@ -376,7 +400,19 @@
                 }
               }
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Booking request accepted', () => pm.response.to.have.status(201));",
+                  "pm.collectionVariables.set('bookingId', pm.response.json().booking._id);"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "List my bookings",
@@ -430,7 +466,19 @@
                 }
               }
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Service request accepted', () => pm.response.to.have.status(201));",
+                  "pm.collectionVariables.set('serviceRequestId', pm.response.json().request._id);"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "List my service requests",
@@ -637,7 +685,20 @@
                 }
               }
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Service created', () => pm.response.to.have.status(201));",
+                  "pm.collectionVariables.set('serviceId', pm.response.json().service._id);",
+                  "pm.collectionVariables.set('serviceSlug', pm.response.json().service.slug);"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Update service",
@@ -763,6 +824,14 @@
     },
     {
       "key": "serviceId",
+      "value": ""
+    },
+    {
+      "key": "serverUrl",
+      "value": "http://localhost:5000"
+    },
+    {
+      "key": "publicInquiryId",
       "value": ""
     }
   ]
