@@ -2,7 +2,7 @@
   "info": {
     "_postman_id": "7f8fa3ec-8475-4d23-b3d2-7a8c12a0f015",
     "name": "PragnyX CA Firm Management API",
-    "description": "Postman collection mapped to the PragnyX MERN assignment. Start the Express API and MongoDB first. Register a client and seed an administrator using private environment variables. Set preferredDate to a future YYYY-MM-DD date and selectedService to an active service name. Do not use the test database or sample passwords for production.",
+    "description": "Postman collection mapped to the PragnyX MERN assignment. Start the Express API and MongoDB first. Register a client and seed an administrator using private environment variables. Set preferredDate to a future YYYY-MM-DD date and selectedService to an active service name. Do not use the test database or sample passwords for production. All requests include expected HTTP status assertions and can be executed with Newman in sequence.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
@@ -17,7 +17,18 @@
             "url": {
               "raw": "{{serverUrl}}/health"
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200 for Health check', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "List active services",
@@ -27,7 +38,18 @@
             "url": {
               "raw": "{{baseUrl}}/services"
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200 for List active services', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Get a service by slug",
@@ -37,7 +59,18 @@
             "url": {
               "raw": "{{baseUrl}}/services/{{serviceSlug}}"
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200 for Get a service by slug', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -76,7 +109,8 @@
                   "pm.test('Client registration returns 201', () => pm.response.to.have.status(201));",
                   "const data = pm.response.json();",
                   "pm.collectionVariables.set('clientToken', data.token);",
-                  "pm.collectionVariables.set('clientId', data.user.id);"
+                  "pm.collectionVariables.set('clientId', data.user.id);",
+                  "pm.test('HTTP 201 for Register client', () => pm.response.to.have.status(201));"
                 ]
               }
             }
@@ -112,7 +146,8 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test('Client login returns 200', () => pm.response.to.have.status(200));",
-                  "pm.collectionVariables.set('clientToken', pm.response.json().token);"
+                  "pm.collectionVariables.set('clientToken', pm.response.json().token);",
+                  "pm.test('HTTP 200 for Login client', () => pm.response.to.have.status(200));"
                 ]
               }
             }
@@ -148,7 +183,8 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test('Admin login returns 200', () => pm.response.to.have.status(200));",
-                  "pm.collectionVariables.set('adminToken', pm.response.json().token);"
+                  "pm.collectionVariables.set('adminToken', pm.response.json().token);",
+                  "pm.test('HTTP 200 for Login administrator', () => pm.response.to.have.status(200));"
                 ]
               }
             }
@@ -172,7 +208,18 @@
             "url": {
               "raw": "{{baseUrl}}/auth/me"
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200 for Get current user', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Update client profile",
@@ -206,7 +253,18 @@
                 }
               }
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200 for Update client profile', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -243,7 +301,8 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test('Public inquiry accepted', () => pm.response.to.have.status(201));",
-                  "pm.collectionVariables.set('publicInquiryId', pm.response.json().inquiry._id);"
+                  "pm.collectionVariables.set('publicInquiryId', pm.response.json().inquiry._id);",
+                  "pm.test('HTTP 201 for Submit public inquiry', () => pm.response.to.have.status(201));"
                 ]
               }
             }
@@ -289,7 +348,8 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test('Client inquiry accepted', () => pm.response.to.have.status(201));",
-                  "pm.collectionVariables.set('inquiryId', pm.response.json().inquiry._id);"
+                  "pm.collectionVariables.set('inquiryId', pm.response.json().inquiry._id);",
+                  "pm.test('HTTP 201 for Submit signed-in inquiry', () => pm.response.to.have.status(201));"
                 ]
               }
             }
@@ -313,7 +373,18 @@
             "url": {
               "raw": "{{baseUrl}}/inquiries/mine"
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200 for List my inquiries', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "List all inquiries (admin)",
@@ -333,7 +404,18 @@
             "url": {
               "raw": "{{baseUrl}}/inquiries"
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200 for List all inquiries (admin)', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Update inquiry status (admin)",
@@ -367,7 +449,18 @@
                 }
               }
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200 for Update inquiry status (admin)', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -414,7 +507,8 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test('Booking request accepted', () => pm.response.to.have.status(201));",
-                  "pm.collectionVariables.set('bookingId', pm.response.json().booking._id);"
+                  "pm.collectionVariables.set('bookingId', pm.response.json().booking._id);",
+                  "pm.test('HTTP 201 for Create consultation booking', () => pm.response.to.have.status(201));"
                 ]
               }
             }
@@ -438,7 +532,18 @@
             "url": {
               "raw": "{{baseUrl}}/bookings/mine"
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200 for List my bookings', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Create service request",
@@ -480,7 +585,8 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test('Service request accepted', () => pm.response.to.have.status(201));",
-                  "pm.collectionVariables.set('serviceRequestId', pm.response.json().request._id);"
+                  "pm.collectionVariables.set('serviceRequestId', pm.response.json().request._id);",
+                  "pm.test('HTTP 201 for Create service request', () => pm.response.to.have.status(201));"
                 ]
               }
             }
@@ -504,7 +610,18 @@
             "url": {
               "raw": "{{baseUrl}}/service-requests/mine"
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200 for List my service requests', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -529,7 +646,18 @@
             "url": {
               "raw": "{{baseUrl}}/admin/stats"
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200 for Dashboard statistics', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "List registered clients",
@@ -549,7 +677,18 @@
             "url": {
               "raw": "{{baseUrl}}/admin/clients"
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200 for List registered clients', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "List all bookings",
@@ -569,7 +708,18 @@
             "url": {
               "raw": "{{baseUrl}}/bookings"
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200 for List all bookings', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Update booking status",
@@ -603,7 +753,18 @@
                 }
               }
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200 for Update booking status', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "List all service requests",
@@ -623,7 +784,18 @@
             "url": {
               "raw": "{{baseUrl}}/service-requests"
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200 for List all service requests', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Update service request status",
@@ -657,7 +829,18 @@
                 }
               }
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200 for Update service request status', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Create service",
@@ -700,7 +883,8 @@
                 "exec": [
                   "pm.test('Service created', () => pm.response.to.have.status(201));",
                   "pm.collectionVariables.set('serviceId', pm.response.json().service._id);",
-                  "pm.collectionVariables.set('serviceSlug', pm.response.json().service.slug);"
+                  "pm.collectionVariables.set('serviceSlug', pm.response.json().service.slug);",
+                  "pm.test('HTTP 201 for Create service', () => pm.response.to.have.status(201));"
                 ]
               }
             }
@@ -738,7 +922,18 @@
                 }
               }
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200 for Update service', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Delete/archive service",
@@ -758,7 +953,18 @@
             "url": {
               "raw": "{{baseUrl}}/services/{{serviceId}}"
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200 for Delete/archive service', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
         }
       ]
     }
