@@ -30,13 +30,13 @@ export function AboutPage() {
 
 export function ServicesPage() {
   const [services,setServices] = useState(SERVICES);
-  useEffect(()=>{api.get("/services").then(({data})=>{if(data.services?.length)setServices(data.services)}).catch(()=>{});},[]);
-  return <>{pageTitle("OUR EXPERTISE","The right support for every step.","A considered range of accounting, tax, audit and advisory services — shaped around your needs.")}<section className="section-pad"><div className="container"><div className="service-grid service-grid-all">{services.map((s,i)=><ServiceCard key={s._id||s.slug} service={s} index={i}/>)}</div></div></section><section className="cta-section"><div className="container cta-inner"><div><span className="eyebrow">NOT SURE WHERE TO START?</span><h2>Let's understand<br/><em>what you need.</em></h2></div><Link to="/booking" className="button button-gold">Book a consultation <ArrowUpRight size={16}/></Link></div></section></>;
+  useEffect(()=>{api.get("/services").then(({data})=>setServices(Array.isArray(data.services)?data.services:[])).catch(()=>{});},[]);
+  return <>{pageTitle("OUR EXPERTISE","The right support for every step.","A considered range of accounting, tax, audit and advisory services — shaped around your needs.")}<section className="section-pad"><div className="container">{services.length ? <div className="service-grid service-grid-all">{services.map((s,i)=><ServiceCard key={s._id||s.slug} service={s} index={i}/>)}</div> : <p className="empty-state">No services are currently listed. Please contact us and our team will help you.</p>}</div></section><section className="cta-section"><div className="container cta-inner"><div><span className="eyebrow">NOT SURE WHERE TO START?</span><h2>Let's understand<br/><em>what you need.</em></h2></div><Link to="/booking" className="button button-gold">Book a consultation <ArrowUpRight size={16}/></Link></div></section></>;
 }
 
 export function ServiceDetailPage() {
   const {slug}=useParams(); const [service,setService]=useState(SERVICES.find(s=>s.slug===slug)); const [loading,setLoading]=useState(true);
-  useEffect(()=>{setLoading(true);api.get(`/services/${slug}`).then(({data})=>setService(data.service)).catch(()=>setService(SERVICES.find(s=>s.slug===slug))).finally(()=>setLoading(false));},[slug]);
+  useEffect(()=>{setLoading(true);api.get(`/services/${slug}`).then(({data})=>setService(data.service||null)).catch(err=>setService(err.response?.status===404?null:SERVICES.find(s=>s.slug===slug)||null)).finally(()=>setLoading(false));},[slug]);
   if(loading)return <div className="page-loader"><span className="spinner"/>Loading service…</div>;
   if(!service)return <>{pageTitle("SERVICE NOT FOUND","We couldn't find that service.","Explore our complete range of services.")}<div className="container section-pad"><Link className="text-link" to="/services">Back to services <ArrowRight size={16}/></Link></div></>;
   return <>{pageTitle("OUR SERVICES",service.name||service.title,service.description)}<section className="section-pad"><div className="container detail-grid"><div><span className="eyebrow">A CLEARER WAY FORWARD</span><h2>Practical expertise.<br/><em>Personal attention.</em></h2><p>Every engagement begins with understanding your circumstances. Tell us what you are working through, and our team can help identify the next steps and information required.</p><div className="benefit-list"><div><span><CheckCircle2 size={16}/></span><p><strong>Understand your requirements</strong><small>We begin by clarifying your situation and objectives.</small></p></div><div><span><CheckCircle2 size={16}/></span><p><strong>Agree on a clear process</strong><small>Know the documents, milestones and next steps.</small></p></div><div><span><CheckCircle2 size={16}/></span><p><strong>Stay informed</strong><small>Keep communication clear throughout the engagement.</small></p></div></div></div><aside className="detail-aside"><span className="eyebrow">TAKE THE NEXT STEP</span><h3>Let's discuss your needs.</h3><p>Share a few details and request a consultation with the team.</p><Link to={`/booking?service=${encodeURIComponent(service.name||service.title)}`} className="button button-gold button-full">Request a consultation <ArrowUpRight size={16}/></Link><Link to="/contact" className="text-link">Send an inquiry instead</Link></aside></div></section><div className="container detail-back"><Link to="/services" className="text-link"><ArrowLeft size={16}/> All services</Link></div></>;
@@ -45,7 +45,7 @@ export function ServiceDetailPage() {
 export function ContactPage() {
   const [busy,setBusy]=useState(false),[message,setMessage]=useState(""),[error,setError]=useState(false);
   async function submit(e){e.preventDefault();const form=e.currentTarget;setBusy(true);setMessage("");setError(false);const f=new FormData(form);try{await api.post("/inquiries",{name:f.get("name"),email:f.get("email"),phone:f.get("phone"),subject:f.get("subject"),message:f.get("message")});setMessage("Thank you. Your inquiry has been received.");form.reset();}catch(err){setError(true);setMessage(err.userMessage||"Unable to submit your inquiry.");}finally{setBusy(false);}}
-  return <>{pageTitle("CONTACT","A good conversation can start here.","Tell us a little about what you need. Our team will be in touch.")}<section className="section-pad"><div className="container contact-grid"><div className="contact-copy"><span className="eyebrow">GET IN TOUCH</span><h2>Let's make things<br/><em>a little clearer.</em></h2><p>Whether you have a specific question or simply want to explore your options, we would be glad to hear from you.</p><div className="contact-method"><span>Email</span><a href="mailto:hello@pragnyx.example">hello@pragnyx.example</a></div><div className="contact-method"><span>Phone</span><a href="tel:+910000000000">+91 00000 00000</a></div><div className="contact-method"><span>Office hours</span><strong>Monday–Friday, 9:30 AM–6:30 PM</strong></div></div><form className="form-card" onSubmit={submit}><h3>Send us a message</h3><p>Fields marked with * are required.</p><Notice message={message} error={error}/><div className="form-grid"><Field label="Full name *" name="name" required placeholder="Your name"/><Field label="Email address *" name="email" type="email" required placeholder="you@example.com"/><Field label="Phone number *" name="phone" type="tel" required placeholder="+91"/><Field label="Subject *" name="subject" required placeholder="How can we help?"/></div><TextArea label="Message *" name="message" required placeholder="Tell us a little about your requirements…"/><button className="button button-dark button-full" disabled={busy}>{busy?"Sending…":"Send inquiry"} <ArrowUpRight size={16}/></button></form></div></section></>;
+  return <>{pageTitle("CONTACT","A good conversation can start here.","Tell us a little about what you need. Our team will be in touch.")}<section className="section-pad"><div className="container contact-grid"><div className="contact-copy"><span className="eyebrow">GET IN TOUCH</span><h2>Let's make things<br/><em>a little clearer.</em></h2><p>Whether you have a specific question or simply want to explore your options, we would be glad to hear from you.</p><div className="contact-method"><span>Email</span><a href="mailto:hello@pragnyx.example">hello@pragnyx.example</a></div><div className="contact-method"><span>Phone</span><a href="tel:+910000000000">+91 00000 00000</a></div><div className="contact-method"><span>Office hours</span><strong>Monday–Friday, 9:30 AM–6:30 PM</strong></div></div><form className="form-card" onSubmit={submit}><h3>Send us a message</h3><p>Fields marked with * are required.</p><Notice message={message} error={error}/><div className="form-grid"><Field label="Full name *" name="name" required maxLength="100" placeholder="Your name"/><Field label="Email address *" name="email" type="email" required maxLength="180" placeholder="you@example.com"/><Field label="Phone number *" name="phone" type="tel" required maxLength="30" pattern="[+]?[0-9][0-9 ().-]{6,28}" title="Enter a valid phone number" placeholder="+91"/><Field label="Subject *" name="subject" required maxLength="160" placeholder="How can we help?"/></div><TextArea label="Message *" name="message" required maxLength="4000" placeholder="Tell us a little about your requirements…"/><button className="button button-dark button-full" disabled={busy}>{busy?"Sending…":"Send inquiry"} <ArrowUpRight size={16}/></button></form></div></section></>;
 }
 
 export function LoginPage(){
@@ -65,10 +65,59 @@ export function RegisterPage(){
 function AuthShell({eyebrow,title,intro,footer,children}){return <section className="auth-section"><div className="auth-side"><Link to="/" className="brand brand-light"><span className="brand-mark">P<span>.</span></span><span className="brand-copy"><strong>PRAGNYX</strong><small>CHARTERED ACCOUNTANTS</small></span></Link><div className="auth-side-copy"><span className="eyebrow">{eyebrow}</span><h1>{title}</h1><p>{intro}</p></div><span className="auth-side-foot">CLARITY IN EVERY NUMBER.</span></div><div className="auth-form-side"><div className="auth-form-wrap">{children}<p className="auth-footer">{footer}</p></div></div></section>}
 
 export function BookingPage(){
-  const {user}=useAuth(),navigate=useNavigate(),location=useLocation();const qs=new URLSearchParams(location.search);const [services,setServices]=useState(SERVICES),[busy,setBusy]=useState(false),[message,setMessage]=useState(""),[error,setError]=useState(false);
-  useEffect(()=>{api.get("/services").then(({data})=>{if(data.services?.length)setServices(data.services)}).catch(()=>{});},[]);
-  async function submit(e){e.preventDefault();if(!user){navigate("/login",{state:{from:location}});return;}const form=e.currentTarget;setBusy(true);setMessage("");setError(false);const f=new FormData(form);try{await api.post("/bookings",{name:f.get("name"),email:f.get("email"),phone:f.get("phone"),service:f.get("service"),preferredDate:f.get("date"),preferredTime:f.get("time"),message:f.get("message")});setMessage("Your consultation request has been submitted. You can follow its status in your dashboard.");form.reset();}catch(err){setError(true);setMessage(err.userMessage||"Unable to submit booking.");}finally{setBusy(false);}}
-  return <>{pageTitle("CONSULTATION","Let's find a time to talk.","Share your requirements and your preferred time. Consultation requests are reviewed by our team.")}<section className="section-pad"><div className="container booking-grid"><div><span className="eyebrow">A FIRST CONVERSATION</span><h2>Start with what<br/><em>matters to you.</em></h2><p>Choose a service and a preferred time. Our team will review your request and update its status in your client dashboard.</p><div className="booking-assurance"><CalendarDays/><span>Choose a future date. Your booking remains pending until confirmed by the team.</span></div><p className="muted-small">{user?"You are signed in as "+user.email:"You'll be asked to sign in before submitting the request."}</p></div><form className="form-card" onSubmit={submit}><h3>Request a consultation</h3><Notice message={message} error={error}/><div className="form-grid"><Field label="Client name *" name="name" required defaultValue={user?.name||""} placeholder="Your name"/><Field label="Email address *" name="email" type="email" required defaultValue={user?.email||""} placeholder="you@example.com"/><Field label="Phone number *" name="phone" type="tel" required placeholder="+91"/><SelectField label="Required service *" name="service" required defaultValue={qs.get("service")||""}><option value="">Select a service</option>{services.map(s=><option key={s._id||s.slug} value={s.name||s.title}>{s.name||s.title}</option>)}</SelectField><Field label="Preferred date *" name="date" type="date" required min={new Date(Date.now()-new Date().getTimezoneOffset()*60000).toISOString().slice(0,10)}/><SelectField label="Preferred time *" name="time" required defaultValue=""><option value="">Select a time</option>{["09:30","10:30","11:30","12:30","14:00","15:00","16:00","17:00"].map(t=><option key={t} value={t}>{t}</option>)}</SelectField></div><TextArea label="Additional message" name="message" placeholder="Anything we should know before we speak?"/><button className="button button-dark button-full" disabled={busy}>{busy?"Submitting…":"Submit booking request"} <ArrowUpRight size={16}/></button><small className="form-privacy">Your details are used to respond to this consultation request.</small></form></div></section></>;
+  const {user}=useAuth(),navigate=useNavigate(),location=useLocation();
+  const qs=new URLSearchParams(location.search);
+  const [services,setServices]=useState([]);
+  const [servicesLoading,setServicesLoading]=useState(true);
+  const [servicesError,setServicesError]=useState("");
+  const [busy,setBusy]=useState(false),[message,setMessage]=useState(""),[error,setError]=useState(false);
+
+  async function loadServices(){
+    setServicesLoading(true);
+    setServicesError("");
+    try{
+      const {data}=await api.get("/services");
+      setServices(Array.isArray(data.services)?data.services:[]);
+    }catch(err){
+      setServicesError(err.userMessage||"Unable to load available services. Please retry.");
+    }finally{
+      setServicesLoading(false);
+    }
+  }
+
+  useEffect(()=>{loadServices();},[]);
+
+  async function submit(e){
+    e.preventDefault();
+    if(!user){
+      navigate("/login",{state:{from:location}});
+      return;
+    }
+    const form=e.currentTarget;
+    setBusy(true);setMessage("");setError(false);
+    const f=new FormData(form);
+    try{
+      await api.post("/bookings",{
+        name:f.get("name"),
+        email:f.get("email"),
+        phone:f.get("phone"),
+        service:f.get("service"),
+        preferredDate:f.get("date"),
+        preferredTime:f.get("time"),
+        message:f.get("message"),
+      });
+      setMessage("Your consultation request has been submitted. You can follow its status in your dashboard.");
+      form.reset();
+    }catch(err){
+      setError(true);
+      setMessage(err.userMessage||"Unable to submit booking.");
+    }finally{
+      setBusy(false);
+    }
+  }
+
+  const minDate=new Date(Date.now()-new Date().getTimezoneOffset()*60000).toISOString().slice(0,10);
+  return <>{pageTitle("CONSULTATION","Let's find a time to talk.","Share your requirements and your preferred time. Consultation requests are reviewed by our team.")}<section className="section-pad"><div className="container booking-grid"><div><span className="eyebrow">A FIRST CONVERSATION</span><h2>Start with what<br/><em>matters to you.</em></h2><p>Choose a service and a preferred time. Our team will review your request and update its status in your client dashboard.</p><div className="booking-assurance"><CalendarDays/><span>Choose a future date. Your booking remains pending until confirmed by the team.</span></div><p className="muted-small">{user?"You are signed in as "+user.email:"You'll be asked to sign in before submitting the request."}</p></div><form className="form-card" onSubmit={submit}><h3>Request a consultation</h3><Notice message={message} error={error}/>{servicesError&&<div className="notice notice-error" role="alert">{servicesError} <button type="button" className="text-link" onClick={loadServices}>Retry</button></div>}{!servicesLoading&&!servicesError&&services.length===0&&<Notice message="No services are currently available for booking. Please contact the firm." error/>}<div className="form-grid"><Field label="Client name *" name="name" required maxLength="100" defaultValue={user?.name||""} placeholder="Your name"/><Field label="Email address *" name="email" type="email" required maxLength="180" defaultValue={user?.email||""} placeholder="you@example.com"/><Field label="Phone number *" name="phone" type="tel" required maxLength="30" pattern="[+]?[0-9][0-9 ().-]{6,28}" title="Enter a valid phone number" defaultValue={user?.phone||""} placeholder="+91"/><SelectField label="Required service *" name="service" required disabled={servicesLoading||services.length===0} defaultValue={qs.get("service")||""}><option value="">{servicesLoading?"Loading services…":services.length?"Select a service":"No services available"}</option>{services.map(s=><option key={s._id||s.slug} value={s.name||s.title}>{s.name||s.title}</option>)}</SelectField><Field label="Preferred date *" name="date" type="date" required min={minDate}/><SelectField label="Preferred time *" name="time" required defaultValue=""><option value="">Select a time</option>{["09:30","10:30","11:30","12:30","14:00","15:00","16:00","17:00"].map(t=><option key={t} value={t}>{t}</option>)}</SelectField></div><TextArea label="Additional message" name="message" maxLength="2000" placeholder="Anything we should know before we speak?"/><button className="button button-dark button-full" disabled={busy||servicesLoading||services.length===0}>{busy?"Submitting…":"Submit booking request"} <ArrowUpRight size={16}/></button><small className="form-privacy">Your details are used to respond to this consultation request.</small></form></div></section></>;
 }
 
 export function ClientDashboardPage(){
