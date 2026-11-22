@@ -120,7 +120,7 @@ export function ClientDashboardPage(){
 export function AdminDashboardPage(){
   const [stats,setStats]=useState(null),[clients,setClients]=useState([]),[bookings,setBookings]=useState([]),[inquiries,setInquiries]=useState([]),[services,setServices]=useState([]),[serviceRequests,setServiceRequests]=useState([]);
   const [tab,setTab]=useState("bookings"),[loading,setLoading]=useState(true),[error,setError]=useState(""),[notice,setNotice]=useState("");
-  const [busyAction,setBusyAction]=useState(""),[serviceBusy,setServiceBusy]=useState(false);
+  const [busyAction,setBusyAction]=useState(""),[serviceBusy,setServiceBusy]=useState(false),[editingService,setEditingService]=useState(null);
 
   async function load(silent=false){
     if(!silent)setLoading(true);
@@ -174,19 +174,34 @@ export function AdminDashboardPage(){
     finally{setBusyAction("");}
   }
 
-  async function editService(service){
-    const name=window.prompt("Service name",service.name);
-    if(name===null||!name.trim())return;
-    const slug=window.prompt("URL slug",service.slug);
-    if(slug===null||!slug.trim())return;
-    const shortDescription=window.prompt("Short description",service.shortDescription||"");
-    if(shortDescription===null||!shortDescription.trim())return;
-    const description=window.prompt("Full description",service.description||"");
-    if(description===null||!description.trim())return;
-    setBusyAction(`service:${service._id}`);setError("");setNotice("");
+  function editService(service){
+    setEditingService({
+      _id:service._id,
+      name:service.name||"",
+      slug:service.slug||"",
+      shortDescription:service.shortDescription||"",
+      description:service.description||"",
+    });
+    setError("");setNotice("");
+  }
+
+  function updateEditingService(field,value){
+    setEditingService(current=>current?{...current,[field]:value}:current);
+  }
+
+  async function saveService(event){
+    event.preventDefault();
+    if(!editingService)return;
+    setBusyAction("service:"+editingService._id);setError("");setNotice("");
     try{
-      await api.patch(`/services/${service._id}`,{name,slug,shortDescription,description});
+      await api.patch("/services/"+editingService._id,{
+        name:editingService.name,
+        slug:editingService.slug,
+        shortDescription:editingService.shortDescription,
+        description:editingService.description,
+      });
       setNotice("Service updated.");
+      setEditingService(null);
       await load(true);
     }catch(err){setError(err.userMessage||"Could not update service.");}
     finally{setBusyAction("");}
@@ -229,7 +244,28 @@ export function AdminDashboardPage(){
         {tab==="inquiries"&&<><div className="panel-heading"><h2>Client inquiries</h2></div><DataTable headers={["Contact","Subject","Message","Date","Status"]} rows={inquiries.map(item=>{const key=`inquiry:${item._id}`;return [<><strong>{item.name}</strong><small>{item.email} · {item.phone||"No phone"}</small></>,item.subject,<span className="table-message" title={item.message}>{item.message}</span>,new Date(item.createdAt).toLocaleDateString(),<select className="table-select" aria-label={`Update inquiry from ${item.name}`} value={item.status} disabled={busyAction===key} onChange={event=>updateRecord("inquiry",item._id,event.target.value)}><option value="new">New</option><option value="in-progress">In progress</option><option value="resolved">Resolved</option></select>];})}/></>}
         {tab==="requests"&&<><div className="panel-heading"><h2>Client service requests</h2></div><DataTable headers={["Client","Service","Details","Date","Status"]} rows={serviceRequests.map(item=>{const key=`request:${item._id}`;return [<><strong>{item.user?.name||"Client"}</strong><small>{item.user?.email||""}</small></>,item.service,<span className="table-message" title={item.details}>{item.details}</span>,new Date(item.createdAt).toLocaleDateString(),<select className="table-select" aria-label={`Update service request for ${item.user?.name||"client"}`} value={item.status} disabled={busyAction===key} onChange={event=>updateRecord("request",item._id,event.target.value)}><option value="pending">Pending</option><option value="in-progress">In progress</option><option value="approved">Approve</option><option value="rejected">Reject</option><option value="completed">Complete</option></select>];})}/></>}
         {tab==="clients"&&<><div className="panel-heading"><h2>Registered clients</h2></div><DataTable headers={["Name","Email","Phone","Joined","Account"]} rows={clients.map(client=>[<strong>{client.name}</strong>,client.email,client.phone||"—",new Date(client.createdAt).toLocaleDateString(),<Status value={client.isActive?"active":"inactive"}/>])}/></>}
-        {tab==="services"&&<><div className="panel-heading"><h2>Manage services</h2></div><form className="inline-add-form" onSubmit={addService}><input name="name" required maxLength="120" placeholder="Service name"/><input name="slug" required maxLength="120" pattern="[a-z0-9]+(?:-[a-z0-9]+)*" title="Use lowercase letters, numbers and hyphens" placeholder="url-friendly-slug"/><input name="shortDescription" required maxLength="240" placeholder="Short description"/><input name="description" required maxLength="3000" placeholder="Full description"/><button className="button button-dark button-small" disabled={serviceBusy}>{serviceBusy?"Adding…":<><Plus size={15}/> Add</>}</button></form><DataTable headers={["Service","Slug","Description","Action"]} rows={services.map(service=>{const key=`service:${service._id}`;return [<strong>{service.name}</strong>,service.slug,<span className="table-message" title={service.shortDescription||service.description}>{service.shortDescription||service.description}</span>,<div className="table-actions"><button type="button" className="table-edit" disabled={busyAction===key} onClick={()=>editService(service)}>Edit</button><button type="button" className="table-delete" disabled={busyAction===key} onClick={()=>archiveService(service._id)}>Archive</button></div>];})}/></>}
+        {tab==="services"&&<>
+          <div className="panel-heading"><h2>Manage services</h2></div>
+          <form className="inline-add-form" onSubmit={addService}>
+            <input name="name" required maxLength="120" placeholder="Service name"/>
+            <input name="slug" required maxLength="120" pattern="[a-z0-9]+(?:-[a-z0-9]+)*" title="Use lowercase letters, numbers and hyphens" placeholder="url-friendly-slug"/>
+            <input name="shortDescription" required maxLength="240" placeholder="Short description"/>
+            <input name="description" required maxLength="3000" placeholder="Full description"/>
+            <button className="button button-dark button-small" disabled={serviceBusy}>{serviceBusy?"Adding…":<><Plus size={15}/> Add</>}</button>
+          </form>
+          {editingService&&<form className="service-edit-form" onSubmit={saveService}>
+            <div className="service-edit-heading"><strong>Edit service</strong><button type="button" className="table-edit" onClick={()=>setEditingService(null)}>Cancel</button></div>
+            <input aria-label="Service name" required maxLength="120" value={editingService.name} onChange={event=>updateEditingService("name",event.target.value)}/>
+            <input aria-label="Service URL slug" required maxLength="120" pattern="[a-z0-9]+(?:-[a-z0-9]+)*" title="Use lowercase letters, numbers and hyphens" value={editingService.slug} onChange={event=>updateEditingService("slug",event.target.value)}/>
+            <input aria-label="Short description" required maxLength="240" value={editingService.shortDescription} onChange={event=>updateEditingService("shortDescription",event.target.value)}/>
+            <textarea aria-label="Full description" required maxLength="3000" rows="3" value={editingService.description} onChange={event=>updateEditingService("description",event.target.value)}/>
+            <button className="button button-dark button-small" disabled={busyAction==="service:"+editingService._id}>{busyAction==="service:"+editingService._id?"Saving…":"Save changes"}</button>
+          </form>}
+          <DataTable headers={["Service","Slug","Description","Action"]} rows={services.map(service=>{
+            const key="service:"+service._id;
+            return [<strong>{service.name}</strong>,service.slug,<span className="table-message" title={service.shortDescription||service.description}>{service.shortDescription||service.description}</span>,<div className="table-actions"><button type="button" className="table-edit" disabled={Boolean(busyAction)||Boolean(editingService)} onClick={()=>editService(service)}>Edit</button><button type="button" className="table-delete" disabled={Boolean(busyAction)||Boolean(editingService)} onClick={()=>archiveService(service._id)}>Archive</button></div>];
+          })}/>
+        </>}
       </section>
     </>}
   </div></section>;
