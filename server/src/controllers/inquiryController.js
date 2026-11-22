@@ -3,11 +3,12 @@ import { HttpError } from "../utils/httpError.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
 export const createInquiry = asyncHandler(async (req, res) => {
-  const { name, email, phone = "", subject, message } = req.body;
-  if (!name?.trim() || !email?.trim() || !subject?.trim() || !message?.trim()) {
-    throw new HttpError(400, "Name, email, subject and message are required.");
+  const { name, email, phone, subject, message } = req.body;
+  if (!name?.trim() || !email?.trim() || !phone?.trim() || !subject?.trim() || !message?.trim()) {
+    throw new HttpError(400, "Name, email, phone, subject and message are required.");
   }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) throw new HttpError(400, "Enter a valid email address.");
+  if (phone.trim().length < 7) throw new HttpError(400, "Enter a valid phone number.");
   const inquiry = await Inquiry.create({
     user: req.user?._id || null, name, email, phone, subject, message,
   });
