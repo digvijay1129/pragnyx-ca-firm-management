@@ -12,12 +12,13 @@ export default function ServiceRequestForm({ onCreated }) {
 
   async function submit(event) {
     event.preventDefault();
+    const formElement=event.currentTarget;
     setBusy(true);setMessage("");setError(false);
-    const form=new FormData(event.currentTarget);
+    const form=new FormData(formElement);
     try {
       await api.post("/service-requests",{service:form.get("service"),details:form.get("details")});
       setMessage("Your service request has been submitted.");
-      event.currentTarget.reset();
+      formElement.reset();
       onCreated?.();
     } catch (err) {
       setError(true);
