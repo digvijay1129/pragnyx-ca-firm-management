@@ -38,6 +38,8 @@ server/
     scripts/      Database seed script
 docs/             Architecture notes, PDF compliance review and deployment checklist
 postman/          Importable Postman collection for API requests
+client/e2e/       Playwright browser end-to-end tests
+client/playwright.config.js  Chromium test runner configuration
 ```
 
 ## Requirements
@@ -166,7 +168,7 @@ npx playwright install chromium
 PLAYWRIGHT_BASE_URL=http://127.0.0.1:5173 E2E_CLIENT_PASSWORD=use-a-test-only-password E2E_ADMIN_EMAIL=admin@example.test E2E_ADMIN_PASSWORD=use-a-test-only-admin-password npm run test:e2e
 ```
 
-The frontend is started automatically by Playwright. Never use a production database or production administrator credentials for browser tests. CI provisions its own disposable MongoDB database and temporary accounts. Screenshots are saved under `client/test-results/screenshots`; Playwright traces and the HTML report are retained as GitHub Actions artifacts when available.
+The frontend is started automatically by Playwright. Never use a production database or production administrator credentials for browser tests. CI provisions its own disposable MongoDB database and temporary accounts. The latest completed workflow passed **2 Playwright scenarios** (public/responsive pages and the client/admin end-to-end workflow). Screenshots are saved under `client/test-results/screenshots`; Playwright traces and the HTML report are retained as GitHub Actions artifacts. [View the successful browser test run](https://github.com/digvijay1129/pragnyx-ca-firm-management/actions/runs/44986474929).
 
 ## Database collections
 
