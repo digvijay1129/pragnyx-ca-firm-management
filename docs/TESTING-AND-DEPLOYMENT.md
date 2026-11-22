@@ -8,7 +8,7 @@ The GitHub Actions workflow runs:
 - Backend syntax: run Node.js syntax checks across the backend source and test JavaScript files.
 - Backend integration: start an isolated MongoDB 7 service and run the Express API integration tests with Node's test runner and Supertest.
 
-The API integration suite covers health response, public service listing, client registration, duplicate registration, password hashing, login, JWT-protected profile, forbidden client access to admin routes, profile updates, authenticated inquiry ownership, admin inquiry status changes, invalid calendar dates, valid bookings, client service requests, booking approval, service request status updates, service create/update/archive, admin statistics and client listing. After these tests, CI starts the API, seeds a CI-only administrator and service catalogue, and runs all 26 requests in `postman/PragnyX_CA_Firm_Management.postman_collection.json` with Newman. The latest successful run recorded **32 assertions, 0 failures**.
+The API integration suite covers health response, public service listing, client registration, duplicate registration, password hashing, login, JWT-protected profile, forbidden client access to admin routes, profile updates, authenticated inquiry ownership, admin inquiry status changes, invalid calendar dates, valid bookings, client service requests, booking approval, service request status updates, service create/update/archive, admin statistics and client listing. After these tests, CI starts the API, seeds a CI-only administrator and service catalogue, and runs all 26 requests in `postman/PragnyX_CA_Firm_Management.postman_collection.json` with Newman. The latest successful run recorded **34 assertions, 0 failures**.
 
 ## Postman manual API check
 
