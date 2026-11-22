@@ -13,5 +13,5 @@
 .service-edit-form input,.service-edit-form textarea{width:100%;min-width:0;border:1px solid #d9d5cc;background:#fff;padding:10px;font:10px "DM Sans",sans-serif;color:#172638}
 .service-edit-form textarea{grid-column:1/-1;resize:vertical}
 .service-edit-form button[type=submit]{justify-self:start}
-.status-active{background:#e9f3e9;color:#3d7548}.status-inactive{background:#f8e9e7;color:#a24a42}
+
 @media(max-width:650px){.service-edit-form{grid-template-columns:1fr}.service-edit-form textarea,.service-edit-heading{grid-column:1}}
