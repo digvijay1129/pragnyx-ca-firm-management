@@ -136,21 +136,31 @@ describe("PragnyX API integration", () => {
     assert.equal(profile.body.user.phone, "+91 99887 76655");
   });
 
-  it("creates public inquiries and lets administrators view and update them", async () => {
-    const created = await request(app).post("/api/inquiries")
-      .set("Authorization", "Bearer " + clientToken)
-      .send({
+  it("accepts anonymous and client inquiries, then lets administrators view and update them", async () => {
+    const anonymous = await request(app).post("/api/inquiries").send({
       name: "Public Visitor",
       email: "visitor@example.test",
       phone: "+91 98765 12345",
-      subject: "Accounting consultation",
+      subject: "Public accounting consultation",
       message: "Please contact me about accounting support.",
     }).expect(201);
+    assert.equal(anonymous.body.inquiry.user, null);
+
+    const created = await request(app).post("/api/inquiries")
+      .set("Authorization", "Bearer " + clientToken)
+      .send({
+        name: "Integration Client",
+        email: "integration.client@example.test",
+        phone: "+91 98765 43210",
+        subject: "Signed-in client consultation",
+        message: "Please contact me about my service requirements.",
+      }).expect(201);
     inquiryId = created.body.inquiry._id;
 
     const mine = await request(app).get("/api/inquiries/mine")
       .set("Authorization", "Bearer " + clientToken).expect(200);
     assert.ok(mine.body.inquiries.some((item) => item._id === inquiryId));
+    assert.equal(mine.body.inquiries.length, 1);
 
     const adminLogin = await request(app).post("/api/auth/login").send({
       email: "integration.admin@example.test",
@@ -169,6 +179,15 @@ describe("PragnyX API integration", () => {
   });
 
   it("validates consultation dates and creates client bookings", async () => {
+    await request(app).post("/api/bookings").send({
+      name: "Integration Client",
+      email: "integration.client@example.test",
+      phone: "+91 98765 43210",
+      service: "Integration Accounting",
+      preferredDate: futureIndiaDate(),
+      preferredTime: "10:30",
+    }).expect(401);
+
     await request(app).post("/api/bookings")
       .set("Authorization", `Bearer ${clientToken}`)
       .send({
@@ -177,6 +196,17 @@ describe("PragnyX API integration", () => {
         phone: "+91 98765 43210",
         service: "Integration Accounting",
         preferredDate: "2026-02-30",
+        preferredTime: "10:30",
+      }).expect(400);
+
+    await request(app).post("/api/bookings")
+      .set("Authorization", `Bearer ${clientToken}`)
+      .send({
+        name: "Integration Client",
+        email: "integration.client@example.test",
+        phone: "+91 98765 43210",
+        service: "Integration Accounting",
+        preferredDate: futureIndiaDate(-1),
         preferredTime: "10:30",
       }).expect(400);
 
@@ -249,7 +279,7 @@ describe("PragnyX API integration", () => {
       .set("Authorization", `Bearer ${adminToken}`).expect(200);
     assert.equal(stats.body.stats.clients, 1);
     assert.equal(stats.body.stats.activeClients, 1);
-    assert.equal(stats.body.stats.inquiries, 1);
+    assert.equal(stats.body.stats.inquiries, 2);
     assert.equal(stats.body.stats.bookings, 1);
     assert.equal(stats.body.stats.serviceRequests, 1);
     assert.equal(stats.body.stats.services, 1);
