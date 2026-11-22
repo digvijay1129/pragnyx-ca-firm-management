@@ -63,7 +63,7 @@ jobs:
       MONGODB_URI: mongodb://127.0.0.1:27017/pragnyx_test
       JWT_SECRET: ci-only-integration-secret-with-enough-randomness
       JWT_EXPIRES_IN: 1h
-      CLIENT_URL: http://localhost:5173
+      CLIENT_URL: http://127.0.0.1:5173
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -117,6 +117,29 @@ jobs:
             --env-var "adminPassword=PragnyX-CI-Admin-2026!" \
             --env-var "selectedService=Income Tax Filing" \
             --env-var "preferredDate=$(date -u -d '+2 days' +%F)"
+      - name: Install frontend dependencies for browser tests
+        working-directory: client
+        run: npm install
+      - name: Install Chromium and browser dependencies
+        working-directory: client
+        run: npx playwright install --with-deps chromium
+      - name: Run browser end-to-end tests
+        working-directory: client
+        env:
+          PLAYWRIGHT_BASE_URL: http://127.0.0.1:5173
+          E2E_CLIENT_PASSWORD: PragnyX-CI-Browser-Client-2026!
+          E2E_ADMIN_EMAIL: pragnyx-ci-admin@example.test
+          E2E_ADMIN_PASSWORD: PragnyX-CI-Admin-2026!
+        run: npm run test:e2e
+      - name: Upload browser screenshots, traces and HTML report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pragnyx-browser-e2e-report
+          path: |
+            client/test-results/
+            client/playwright-report/
+          if-no-files-found: warn
       - name: Upload Postman execution report
         if: always()
         uses: actions/upload-artifact@v4
