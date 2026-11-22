@@ -77,3 +77,50 @@ jobs:
       - name: Run API integration tests
         working-directory: server
         run: npm test
+      - name: Seed isolated Postman test accounts and services
+        working-directory: server
+        env:
+          ADMIN_NAME: PragnyX CI Admin
+          ADMIN_EMAIL: pragnyx-ci-admin@example.test
+          ADMIN_PASSWORD: PragnyX-CI-Admin-2026!
+        run: npm run seed
+      - name: Start API for Postman collection
+        working-directory: server
+        run: |
+          npm start > "$RUNNER_TEMP/pragnyx-api.log" 2>&1 &
+          echo $! > "$RUNNER_TEMP/pragnyx-api.pid"
+          for attempt in {1..30}; do
+            if curl --fail --silent http://127.0.0.1:5000/health; then
+              echo "API health check passed."
+              exit 0
+            fi
+            sleep 2
+          done
+          cat "$RUNNER_TEMP/pragnyx-api.log"
+          echo "API did not become healthy."
+          exit 1
+      - name: Run Postman collection with Newman
+        working-directory: server
+        env:
+          POSTMAN_CLIENT_EMAIL: pragnyx-ci-client-${{ github.run_id }}@example.test
+        run: |
+          npx --yes newman@6 run ../postman/PragnyX_CA_Firm_Management.postman_collection.json \
+            --reporters cli,junit \
+            --reporter-junit-export newman-report.xml \
+            --env-var "baseUrl=http://127.0.0.1:5000/api" \
+            --env-var "serverUrl=http://127.0.0.1:5000" \
+            --env-var "clientName=PragnyX CI Client" \
+            --env-var "clientEmail=$POSTMAN_CLIENT_EMAIL" \
+            --env-var "clientPhone=+91 98765 43210" \
+            --env-var "clientPassword=PragnyX-CI-Client-2026!" \
+            --env-var "adminEmail=pragnyx-ci-admin@example.test" \
+            --env-var "adminPassword=PragnyX-CI-Admin-2026!" \
+            --env-var "selectedService=Income Tax Filing" \
+            --env-var "preferredDate=$(date -u -d '+2 days' +%F)"
+      - name: Upload Postman execution report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pragnyx-postman-report
+          path: server/newman-report.xml
+          if-no-files-found: warn
