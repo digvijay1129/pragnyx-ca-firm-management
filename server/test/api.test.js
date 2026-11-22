@@ -13,6 +13,13 @@ const requiredEnv = ["MONGODB_URI", "JWT_SECRET"];
 for (const key of requiredEnv) {
   if (!process.env[key]) throw new Error(`${key} must be configured to run API integration tests.`);
 }
+if (process.env.NODE_ENV !== "test") {
+  throw new Error("API integration tests require NODE_ENV=test.");
+}
+const databaseName = process.env.MONGODB_URI.split("?")[0].split("/").pop();
+if (!databaseName || !databaseName.endsWith("_test")) {
+  throw new Error("Safety stop: MONGODB_URI must target a database whose name ends in _test because the test suite clears and drops that database.");
+}
 
 let clientToken;
 let adminToken;
