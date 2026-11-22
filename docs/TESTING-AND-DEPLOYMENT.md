@@ -26,6 +26,10 @@ Import `postman/PragnyX_CA_Firm_Management.postman_collection.json` into Postman
 
 ## Automated browser end-to-end tests
 
+<badge>CI passed: 2 scenarios</badge>
+
+The latest successful [GitHub Actions run](https://github.com/digvijay1129/pragnyx-ca-firm-management/actions/runs/44986474929) completed both Playwright tests. The report artifact contains eight screenshots covering Home, About, Services on mobile, Service Details, Contact, Client Dashboard, Admin Dashboard and the client workspace after administrator updates.
+
 The Playwright suite is located at `client/e2e/app.spec.js` and uses `client/playwright.config.js`. It runs in Chromium and covers the following:
 
 - [ ] Public Home, About, Services, Service Details and Contact pages.
