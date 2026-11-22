@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import api from "../lib/api";
 
 const AuthContext = createContext(null);
@@ -6,25 +6,54 @@ const AuthContext = createContext(null);
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [sessionError, setSessionError] = useState("");
 
-  useEffect(() => {
+  const restoreSession = useCallback(async () => {
     const token = localStorage.getItem("pragnyx_token");
+    setSessionError("");
     if (!token) {
+      setUser(null);
       setLoading(false);
       return;
     }
-    api.get("/auth/me")
-      .then(({ data }) => setUser(data.user))
-      .catch(() => {
+
+    setLoading(true);
+    try {
+      const { data } = await api.get("/auth/me");
+      setUser(data.user);
+    } catch (error) {
+      const status = error.response?.status;
+      if (status === 401 || status === 403) {
         localStorage.removeItem("pragnyx_token");
         setUser(null);
-      })
-      .finally(() => setLoading(false));
+      } else {
+        setSessionError(error.userMessage || "We could not verify your session. Check your connection and try again.");
+      }
+    } finally {
+      setLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    restoreSession();
+  }, [restoreSession]);
 
   const authenticate = async (path, payload) => {
     const { data } = await api.post(path, payload);
     localStorage.setItem("pragnyx_token", data.token);
+    setSessionError("");
+    setUser(data.user);
+    return data.user;
+  };
+
+  const logout = () => {
+    localStorage.removeItem("pragnyx_token");
+    setUser(null);
+    setSessionError("");
+  };
+
+  const refreshUser = async () => {
+    const { data } = await api.get("/auth/me");
     setUser(data.user);
     return data.user;
   };
@@ -32,19 +61,14 @@ export function AuthProvider({ children }) {
   const value = useMemo(() => ({
     user,
     loading,
+    sessionError,
     isAuthenticated: Boolean(user),
     login: (payload) => authenticate("/auth/login", payload),
     register: (payload) => authenticate("/auth/register", payload),
-    logout: () => {
-      localStorage.removeItem("pragnyx_token");
-      setUser(null);
-    },
-    refreshUser: async () => {
-      const { data } = await api.get("/auth/me");
-      setUser(data.user);
-      return data.user;
-    },
-  }), [user, loading]);
+    logout,
+    refreshUser,
+    retrySession: restoreSession,
+  }), [user, loading, sessionError, restoreSession]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
