@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { ArrowUpRight, CheckCircle2, CircleAlert } from "lucide-react";
 import api from "../lib/api";
+import { Link } from "react-router-dom";
 
 export default function ServiceRequestForm({ onCreated }) {
   const [services,setServices]=useState([]);
@@ -42,7 +43,7 @@ export default function ServiceRequestForm({ onCreated }) {
   }
 
   return <section className="request-form-panel">
-    <div><span className="eyebrow">NEED PROFESSIONAL SUPPORT?</span><h2>Request a service</h2><p>Tell us what you need help with. Your request and its status will appear below.</p></div>
+    <div><span className="eyebrow">NEED PROFESSIONAL SUPPORT?</span><h2>Request a service</h2><p>Tell us what you need help with. Your request and its status will appear below.</p><Link to="/services" className="text-link">Explore all services <ArrowUpRight size={15}/></Link></div>
     <form onSubmit={submit} className="request-form">
       {message&&<div className={error?"notice notice-error":"notice"} role="status"><CheckCircle2 size={15}/>{message}</div>}
       {servicesError&&<div className="notice notice-error" role="alert"><CircleAlert size={15}/>{servicesError} <button type="button" className="text-link" onClick={loadServices}>Retry</button></div>}
