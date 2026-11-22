@@ -3,6 +3,8 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ArrowUpRight, CheckCircle2, CircleAlert } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { AuthShell } from "../components/AuthShell";
+import { Notice } from "../../../shared/components/feedback/Notice";
+import { Field } from "../../../shared/components/forms/FormFields";
 
 export function RegisterPage(){
   const {register,user}=useAuth(),navigate=useNavigate();const [busy,setBusy]=useState(false),[error,setError]=useState("");
