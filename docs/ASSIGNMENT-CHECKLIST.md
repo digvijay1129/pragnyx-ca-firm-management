@@ -47,13 +47,14 @@ The service seed script creates or updates all eight services. Service deletion 
 | PDF requirement | Evidence | Status |
 |---|---|---|
 | React, HTML5, CSS3, JavaScript, React Router, Axios/Fetch | `client/package.json`, `client/src` | Implemented |
-| Responsive UI | Responsive CSS media queries in `client/src/styles.css` | Implemented in CSS; visual device testing manual pending |
+| Responsive UI | Responsive CSS media queries and Playwright mobile viewport check | Implemented; automated 390px overflow check added; visual screenshot review still required |
 | Node.js and Express REST APIs | `server/src/app.js`, `server/src/routes` | Implemented; API integration CI verified |
 | JWT and bcrypt | `authController.js`, `auth.js`, `User.js` | Implemented; core paths CI verified |
 | Input validation and error handling | `utils/validators.js`, Mongoose models, `errorHandler.js` | Implemented; covered by API tests |
 | MongoDB, Mongoose, schemas and data validation | `server/src/models`, `config/db.js` | Implemented; MongoDB 7 integration tests passed in CI |
 | Git and GitHub | Repository and `.github/workflows/ci.yml` | Implemented |
 | Postman for API testing | `postman/PragnyX_CA_Firm_Management.postman_collection.json`, executed with Newman in GitHub Actions | Newman CI verified: 26 requests, 34 assertions passed; manual Postman desktop import/run pending |
+| Browser end-to-end testing | `client/e2e/app.spec.js`, `client/playwright.config.js` | Playwright suite added to CI; latest browser result pending |
 | Environment variables | `server/.env.example`, `client/.env.example` | Implemented |
 | Deployment platform | Hosting configuration and owner connections | Deployment pending |
 
