@@ -53,7 +53,7 @@ The service seed script creates or updates all eight services. Service deletion 
 | Input validation and error handling | `utils/validators.js`, Mongoose models, `errorHandler.js` | Implemented; covered by API tests |
 | MongoDB, Mongoose, schemas and data validation | `server/src/models`, `config/db.js` | Implemented; MongoDB 7 integration tests passed in CI |
 | Git and GitHub | Repository and `.github/workflows/ci.yml` | Implemented |
-| Postman for API testing | `postman/PragnyX_CA_Firm_Management.postman_collection.json` | Collection prepared; manual Postman import/run pending |
+| Postman for API testing | `postman/PragnyX_CA_Firm_Management.postman_collection.json`, executed with Newman in GitHub Actions | <badge>Newman CI verified: 26 requests, 32 assertions passed; manual Postman desktop import/run pending |
 | Environment variables | `server/.env.example`, `client/.env.example` | Implemented |
 | Deployment platform | Hosting configuration and owner connections | Deployment pending |
 
@@ -65,7 +65,7 @@ The successful GitHub Actions workflow runs three jobs:
 - Backend JavaScript syntax checks.
 - Backend API integration tests using Supertest and a disposable MongoDB 7 service.
 
-The latest recorded successful integration run reports **12 tests passed and 0 failed**. Coverage includes health, active service listing, registration, duplicate email, password hashing, login, authorization, profile updates, anonymous and authenticated inquiries, invalid and past booking dates, valid booking, client service requests, admin status changes, service create/update/archive, statistics and client listing.
+The latest recorded successful integration run reports **12 tests passed and 0 failed**. The same workflow then starts the API, seeds CI-only users/services, and runs the complete Postman collection with Newman: **26 requests and 32 assertions passed with 0 failures**. Coverage includes health, active service listing, registration, duplicate email, password hashing, login, authorization, profile updates, anonymous and authenticated inquiries, invalid and past booking dates, valid booking, client service requests, admin status changes, service create/update/archive, statistics and client listing.
 
 See the [latest successful workflow](https://github.com/digvijay1129/pragnyx-ca-firm-management/actions).
 
