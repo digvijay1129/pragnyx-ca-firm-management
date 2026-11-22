@@ -36,7 +36,8 @@ server/
     models/       User, Service, Inquiry, Booking and ServiceRequest
     routes/       API route definitions
     scripts/      Database seed script
-docs/             Architecture notes and assignment checklist
+docs/             Architecture notes, PDF compliance review and deployment checklist
+postman/          Importable Postman collection for API requests
 ```
 
 ## Requirements
@@ -135,6 +136,19 @@ Create a normal client account through Register. Sign in to the administrator ac
 | GET | `/api/admin/clients` | Admin | Registered clients |
 
 Send protected API requests with `Authorization: Bearer <token>`.
+
+## Postman API collection
+
+Import `postman/PragnyX_CA_Firm_Management.postman_collection.json` into Postman. The collection includes health, public services, authentication, contact/inquiries, client booking/service requests, and admin management requests.
+
+1. Start MongoDB and the backend API.
+2. Set collection variable `baseUrl` to `http://localhost:5000/api` and `serverUrl` to `http://localhost:5000`.
+3. Set a unique client email/password and register the client, or use the client login request. The response stores `clientToken`.
+4. Configure the administrator privately using `server/.env`, run `npm run seed`, then enter `adminEmail` and `adminPassword` in Postman and run the admin login request. The response stores `adminToken`.
+5. Set `preferredDate` to a future date in `YYYY-MM-DD` format and `selectedService` to an active service name before submitting a booking or service request.
+6. Run requests in their folder order. Successful create requests save record IDs into collection variables for later admin update requests.
+
+The sample client values are examples only. Change them before use. Keep admin credentials private and do not export/share a Postman environment containing real passwords or tokens. Do not point destructive requests or integration tests at production data.
 
 ## Database collections
 
