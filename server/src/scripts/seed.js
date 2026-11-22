@@ -29,8 +29,8 @@ async function seed() {
   const password = process.env.ADMIN_PASSWORD;
   const name = process.env.ADMIN_NAME || "PragnyX Administrator";
   if (email || password) {
-    if (!email || !password || password.length < 12) {
-      throw new Error("Set ADMIN_EMAIL and an ADMIN_PASSWORD of at least 12 characters together.");
+    if (!email || !password || password.length < 12 || Buffer.byteLength(password, "utf8") > 72) {
+      throw new Error("Set ADMIN_EMAIL and an ADMIN_PASSWORD between 12 characters and 72 UTF-8 bytes together.");
     }
     const existing = await User.findOne({ email });
     if (existing) {
