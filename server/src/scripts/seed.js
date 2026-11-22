@@ -1,6 +1,5 @@
 import "dotenv/config";
 import mongoose from "mongoose";
-import bcrypt from "bcryptjs";
 import { connectDatabase } from "../config/db.js";
 import User from "../models/User.js";
 import Service from "../models/Service.js";
@@ -37,7 +36,7 @@ async function seed() {
     if (existing) {
       if (existing.role !== "admin") throw new Error("ADMIN_EMAIL already belongs to a client account. Choose a different email.");
       existing.name = name;
-      existing.password = await bcrypt.hash(password, 12);
+      existing.password = password;
       existing.isActive = true;
       await existing.save();
     } else {
