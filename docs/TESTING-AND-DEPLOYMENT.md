@@ -8,7 +8,7 @@ The GitHub Actions workflow runs:
 - Backend syntax: run Node.js syntax checks across the backend source and test JavaScript files.
 - Backend integration: start an isolated MongoDB 7 service and run the Express API integration tests with Node's test runner and Supertest.
 
-The API integration suite covers health response, public service listing, client registration, duplicate registration, password hashing, login, JWT-protected profile, forbidden client access to admin routes, profile updates, authenticated inquiry ownership, admin inquiry status changes, invalid calendar dates, valid bookings, client service requests, booking approval, service request status updates, service create/update/archive, admin statistics and client listing. After these tests, CI starts the API, seeds a CI-only administrator and service catalogue, and runs all 26 requests in `postman/PragnyX_CA_Firm_Management.postman_collection.json` with Newman. The latest successful run recorded **34 assertions, 0 failures**.
+The API integration suite covers health response, public service listing, client registration, duplicate registration, password hashing, login, JWT-protected profile, forbidden client access to admin routes, profile updates, authenticated inquiry ownership, admin inquiry status changes, invalid calendar dates, valid bookings, client service requests, booking approval, service request status updates, service create/update/archive, admin statistics and client listing. After these tests, CI starts the API, seeds a CI-only administrator and service catalogue, and runs all 26 requests in `postman/PragnyX_CA_Firm_Management.postman_collection.json` with Newman. The latest successful Newman run recorded **34 assertions, 0 failures**. The newly added Playwright browser suite runs separately in the same CI job; its first result is being validated.
 
 ## Postman manual API check
 
@@ -23,6 +23,21 @@ Import `postman/PragnyX_CA_Firm_Management.postman_collection.json` into Postman
 - [ ] Update an inquiry, booking and service-request status.
 - [ ] Create, edit and delete/archive a service; verify it is no longer returned by the public service endpoint.
 - [ ] Verify a client token receives 403 on admin endpoints and a missing token receives 401 on protected endpoints.
+
+## Automated browser end-to-end tests
+
+The Playwright suite is located at `client/e2e/app.spec.js` and uses `client/playwright.config.js`. It runs in Chromium and covers the following:
+
+- [ ] Public Home, About, Services, Service Details and Contact pages.
+- [ ] Mobile navigation and horizontal overflow check at a 390px viewport.
+- [ ] Client registration, protected dashboard and profile update.
+- [ ] Service request, authenticated inquiry and consultation booking.
+- [ ] Admin login, client listing and booking/inquiry/service-request status updates.
+- [ ] Admin service create, edit and archive.
+- [ ] Client can see the updated statuses after signing back in.
+- [ ] Review captured screenshots for layout and content.
+
+Run `npm run test:e2e` from `client` with the API, dedicated test database and test-only admin variables configured. Do not use production accounts or data. CI installs Chromium and uploads screenshots, traces and the Playwright HTML report.
 
 ## Manual end-to-end smoke tests
 
