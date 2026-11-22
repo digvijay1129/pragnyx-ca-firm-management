@@ -95,6 +95,10 @@ Copy `.env.example` to `.env`:
 VITE_API_BASE_URL=http://localhost:5000/api
 VITE_LINKEDIN_URL=https://www.linkedin.com/company/your-firm
 VITE_INSTAGRAM_URL=https://www.instagram.com/your-firm
+VITE_FIRM_EMAIL=hello@your-domain.example
+VITE_FIRM_PHONE=+91 12345 67890
+VITE_FIRM_HOURS=Monday-Friday, 9:30 AM-6:30 PM
+VITE_FIRM_LOCATION=Your city, India
 ```
 
 Start the frontend:
@@ -188,7 +192,7 @@ Deployment requires accounts and credentials that must be supplied by the projec
 1. Create a MongoDB Atlas database and a database user. Restrict network access to the deployed API service where practical.
 2. Deploy the Node.js API from the `server` directory. Set `NODE_ENV=production`, `PORT` (provided by the host), `MONGODB_URI`, a long random `JWT_SECRET`, `JWT_EXPIRES_IN=1d`, and the exact frontend origin in `CLIENT_URL`.
 3. Run `npm run seed` once against the production database. Set `ADMIN_NAME`, `ADMIN_EMAIL` and a unique `ADMIN_PASSWORD` of at least 12 characters for the first administrator. Run this command only against the intended database.
-4. Deploy the static frontend from the `client` directory with build command `npm install && npm run build` and publish directory `dist`. Set `VITE_API_BASE_URL` to the deployed API's `/api` URL. Set the firm's real LinkedIn and Instagram URLs.
+4. Deploy the static frontend from the `client` directory with build command `npm install && npm run build` and publish directory `dist`. Set `VITE_API_BASE_URL` to the deployed API's `/api` URL. Set the firm's real LinkedIn and Instagram URLs, public email, phone, office hours and location.
 5. Configure SPA fallback rewrites to `/index.html`, update the API CORS origin to the actual frontend domain, and verify the public `/health` endpoint.
 6. Perform the manual smoke-test checklist in `docs/TESTING-AND-DEPLOYMENT.md` and record the final frontend URL, API URL, and separately shared test credentials.
 
@@ -196,7 +200,7 @@ Do not commit production secrets or real administrator credentials. The reposito
 
 ## Assignment reference
 
-See [docs/ASSIGNMENT-CHECKLIST.md](docs/ASSIGNMENT-CHECKLIST.md) for the feature checklist and [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the collection schema, relationships, indexes, validation rules and complete API route map. The project should be evaluated against the supplied PragnyX assignment PDF; sample website copy and contact details are placeholders and must be customized before public business use.
+See [docs/ASSIGNMENT-CHECKLIST.md](docs/ASSIGNMENT-CHECKLIST.md) for the feature checklist and [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the collection schema, relationships, indexes, validation rules and complete API route map. The project should be evaluated against the supplied PragnyX assignment PDF; sample website copy and contact details are placeholders; configure the VITE_FIRM_* and VITE_LINKEDIN_URL/VITE_INSTAGRAM_URL values with approved firm details before submission or public use.
 
 ## Branch policy
 
