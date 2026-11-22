@@ -10,7 +10,7 @@ const userSchema = new mongoose.Schema({
     lowercase: true,
     trim: true,
     maxlength: 180,
-    match: /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/,
+    match: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
   },
   phone: {
     type: String,
@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema({
     maxlength: 30,
     default: "",
     validate: {
-      validator: (value) => !value || /^\\+?[0-9][0-9\\s().-]{6,28}$/.test(value),
+      validator: (value) => !value || /^\+?[0-9][0-9\s().-]{6,28}$/.test(value),
       message: "Enter a valid phone number.",
     },
   },
