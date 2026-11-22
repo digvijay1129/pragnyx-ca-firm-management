@@ -8,4 +8,5 @@ const serviceRequestSchema = new mongoose.Schema({
   adminNote: { type: String, trim: true, maxlength: 1000, default: "" },
 }, { timestamps: true });
 
+serviceRequestSchema.index({ createdAt: -1 });
 export default mongoose.model("ServiceRequest", serviceRequestSchema);
