@@ -118,16 +118,121 @@ export function ClientDashboardPage(){
 }
 
 export function AdminDashboardPage(){
-  const [stats,setStats]=useState(null),[clients,setClients]=useState([]),[bookings,setBookings]=useState([]),[inquiries,setInquiries]=useState([]),[services,setServices]=useState([]),[serviceRequests,setServiceRequests]=useState([]),[tab,setTab]=useState("bookings"),[loading,setLoading]=useState(true),[error,setError]=useState(""),[notice,setNotice]=useState("");
-  async function load(){setLoading(true);setError("");try{const [s,c,b,i,v,r]=await Promise.all([api.get("/admin/stats"),api.get("/admin/clients"),api.get("/bookings"),api.get("/inquiries"),api.get("/services"),api.get("/service-requests")]);setStats(s.data.stats);setClients(c.data.clients||[]);setBookings(b.data.bookings||[]);setInquiries(i.data.inquiries||[]);setServices(v.data.services||[]);setServiceRequests(r.data.requests||[]);}catch(e){setError(e.userMessage||"Unable to load admin data.");}finally{setLoading(false);}}
+  const [stats,setStats]=useState(null),[clients,setClients]=useState([]),[bookings,setBookings]=useState([]),[inquiries,setInquiries]=useState([]),[services,setServices]=useState([]),[serviceRequests,setServiceRequests]=useState([]);
+  const [tab,setTab]=useState("bookings"),[loading,setLoading]=useState(true),[error,setError]=useState(""),[notice,setNotice]=useState("");
+  const [busyAction,setBusyAction]=useState(""),[serviceBusy,setServiceBusy]=useState(false);
+
+  async function load(silent=false){
+    if(!silent)setLoading(true);
+    setError("");
+    const results=await Promise.allSettled([
+      api.get("/admin/stats"),
+      api.get("/admin/clients"),
+      api.get("/bookings"),
+      api.get("/inquiries"),
+      api.get("/services"),
+      api.get("/service-requests"),
+    ]);
+    const [statsResult,clientsResult,bookingsResult,inquiriesResult,servicesResult,requestsResult]=results;
+    const failed=[];
+    if(statsResult.status==="fulfilled")setStats(statsResult.value.data.stats||null);else failed.push("statistics");
+    if(clientsResult.status==="fulfilled")setClients(clientsResult.value.data.clients||[]);else failed.push("clients");
+    if(bookingsResult.status==="fulfilled")setBookings(bookingsResult.value.data.bookings||[]);else failed.push("bookings");
+    if(inquiriesResult.status==="fulfilled")setInquiries(inquiriesResult.value.data.inquiries||[]);else failed.push("inquiries");
+    if(servicesResult.status==="fulfilled")setServices(servicesResult.value.data.services||[]);else failed.push("services");
+    if(requestsResult.status==="fulfilled")setServiceRequests(requestsResult.value.data.requests||[]);else failed.push("service requests");
+    if(failed.length){
+      const firstFailure=results.find(result=>result.status==="rejected");
+      setError(`Some admin data could not be loaded (${failed.join(", ")}). ${firstFailure?.reason?.userMessage||"Please refresh to retry."}`);
+    }
+    setLoading(false);
+  }
+
   useEffect(()=>{load();},[]);
-  async function updateBooking(id,status){try{await api.patch(`/bookings/${id}/status`,{status});setNotice("Booking status updated.");await load();}catch(e){setError(e.userMessage||"Could not update booking.");}}
-  async function updateInquiry(id,status){try{await api.patch(`/inquiries/${id}/status`,{status});setNotice("Inquiry status updated.");await load();}catch(e){setError(e.userMessage||"Could not update inquiry.");}}
-  async function updateRequest(id,status){try{await api.patch(`/service-requests/${id}/status`,{status});setNotice("Service request status updated.");await load();}catch(e){setError(e.userMessage||"Could not update service request.");}}
-  async function deleteService(id){if(!window.confirm("Archive this service?"))return;try{await api.delete(`/services/${id}`);setNotice("Service archived.");await load();}catch(e){setError(e.userMessage||"Could not archive service.");}}
-  async function editService(service){const name=window.prompt("Service name",service.name);if(name===null||!name.trim())return;const slug=window.prompt("URL slug",service.slug);if(slug===null||!slug.trim())return;const shortDescription=window.prompt("Short description",service.shortDescription||"");if(shortDescription===null||!shortDescription.trim())return;const description=window.prompt("Full description",service.description||"");if(description===null||!description.trim())return;try{await api.patch(`/services/${service._id}`,{name,slug,shortDescription,description});setNotice("Service updated.");await load();}catch(e){setError(e.userMessage||"Could not update service.");}}
-  async function addService(e){e.preventDefault();const form=e.currentTarget;const f=new FormData(form);try{await api.post("/services",{name:f.get("name"),slug:f.get("slug"),description:f.get("description"),shortDescription:f.get("shortDescription")});setNotice("Service created.");form.reset();await load();}catch(err){setError(err.userMessage||"Could not create service.");}}
-  return <section className="portal-section"><div className="container"><div className="portal-heading"><div><span className="eyebrow">ADMINISTRATION</span><h1>Firm overview.</h1><p>Manage client activity and keep service operations moving.</p></div><button className="button button-outline" onClick={load}><RefreshCw size={15}/> Refresh</button></div><Notice message={error} error/><Notice message={notice}/>{loading&&!stats?<div className="empty-state">Loading administration data…</div>:<><div className="portal-stats"><Stat icon={<Users/>} label="Registered clients" value={stats?.clients??clients.length}/><Stat icon={<FileText/>} label="Total inquiries" value={stats?.inquiries??inquiries.length}/><Stat icon={<CalendarDays/>} label="Consultation bookings" value={stats?.bookings??bookings.length}/><Stat icon={<ShieldCheck/>} label="Active services" value={stats?.services??services.length}/></div><div className="admin-tabs">{[["bookings","Bookings"],["inquiries","Inquiries"],["requests","Service requests"],["clients","Clients"],["services","Services"]].map(([id,label])=><button key={id} className={tab===id?"selected":""} onClick={()=>setTab(id)}>{label}</button>)}</div><section className="portal-panel admin-table-panel">{tab==="bookings"&&<><div className="panel-heading"><h2>Consultation bookings</h2></div><DataTable headers={["Client","Service","Preferred slot","Status","Update"]} rows={bookings.map(b=>[<><strong>{b.name}</strong><small>{b.email}</small></>,b.service,<>{new Date(b.preferredDate).toLocaleDateString("en-GB",{timeZone:"UTC"})}<small>{b.preferredTime}</small></>,<Status value={b.status}/>,<select className="table-select" value={b.status} onChange={e=>updateBooking(b._id,e.target.value)}><option value="pending">Pending</option><option value="approved">Approve</option><option value="rejected">Reject</option><option value="completed">Complete</option></select>])}/></>}{tab==="inquiries"&&<><div className="panel-heading"><h2>Client inquiries</h2></div><DataTable headers={["Contact","Subject","Message","Date","Status"]} rows={inquiries.map(i=>[<><strong>{i.name}</strong><small>{i.email} · {i.phone||"No phone"}</small></>,i.subject,<span className="table-message">{i.message}</span>,new Date(i.createdAt).toLocaleDateString(),<select className="table-select" value={i.status} onChange={e=>updateInquiry(i._id,e.target.value)}><option value="new">New</option><option value="in-progress">In progress</option><option value="resolved">Resolved</option></select>])}/></>}{tab==="requests"&&<><div className="panel-heading"><h2>Client service requests</h2></div><DataTable headers={["Client","Service","Details","Date","Status"]} rows={serviceRequests.map(r=>[<><strong>{r.user?.name||"Client"}</strong><small>{r.user?.email||""}</small></>,r.service,<span className="table-message">{r.details}</span>,new Date(r.createdAt).toLocaleDateString(),<select className="table-select" value={r.status} onChange={e=>updateRequest(r._id,e.target.value)}><option value="pending">Pending</option><option value="in-progress">In progress</option><option value="approved">Approve</option><option value="rejected">Reject</option><option value="completed">Complete</option></select>])}/></>}{tab==="clients"&&<><div className="panel-heading"><h2>Registered clients</h2></div><DataTable headers={["Name","Email","Phone","Joined"]} rows={clients.map(c=>[<strong>{c.name}</strong>,c.email,c.phone||"—",new Date(c.createdAt).toLocaleDateString()])}/></>}{tab==="services"&&<><div className="panel-heading"><h2>Manage services</h2></div><form className="inline-add-form" onSubmit={addService}><input name="name" required placeholder="Service name"/><input name="slug" required placeholder="url-friendly-slug"/><input name="shortDescription" required placeholder="Short description"/><input name="description" required placeholder="Full description"/><button className="button button-dark button-small"><Plus size={15}/> Add</button></form><DataTable headers={["Service","Slug","Description","Action"]} rows={services.map(s=>[<strong>{s.name}</strong>,s.slug,s.shortDescription||s.description,<div className="table-actions"><button className="table-edit" onClick={()=>editService(s)}>Edit</button><button className="table-delete" onClick={()=>deleteService(s._id)}>Archive</button></div>])}/></>}</section></>}</div></section>;
+
+  async function updateRecord(kind,id,status){
+    const key=`${kind}:${id}`;
+    const endpoint=kind==="booking"?"/bookings":kind==="inquiry"?"/inquiries":"/service-requests";
+    setBusyAction(key);setError("");setNotice("");
+    try{
+      await api.patch(`${endpoint}/${id}/status`,{status});
+      setNotice(kind==="booking"?"Booking status updated.":kind==="inquiry"?"Inquiry status updated.":"Service request status updated.");
+      await load(true);
+    }catch(err){
+      setError(err.userMessage||"The status could not be updated.");
+    }finally{setBusyAction("");}
+  }
+
+  async function archiveService(id){
+    if(!window.confirm("Archive this service? It will no longer appear in the public service list."))return;
+    setBusyAction(`service:${id}`);setError("");setNotice("");
+    try{
+      await api.delete(`/services/${id}`);
+      setNotice("Service archived. Existing bookings and requests are retained.");
+      await load(true);
+    }catch(err){setError(err.userMessage||"Could not archive service.");}
+    finally{setBusyAction("");}
+  }
+
+  async function editService(service){
+    const name=window.prompt("Service name",service.name);
+    if(name===null||!name.trim())return;
+    const slug=window.prompt("URL slug",service.slug);
+    if(slug===null||!slug.trim())return;
+    const shortDescription=window.prompt("Short description",service.shortDescription||"");
+    if(shortDescription===null||!shortDescription.trim())return;
+    const description=window.prompt("Full description",service.description||"");
+    if(description===null||!description.trim())return;
+    setBusyAction(`service:${service._id}`);setError("");setNotice("");
+    try{
+      await api.patch(`/services/${service._id}`,{name,slug,shortDescription,description});
+      setNotice("Service updated.");
+      await load(true);
+    }catch(err){setError(err.userMessage||"Could not update service.");}
+    finally{setBusyAction("");}
+  }
+
+  async function addService(event){
+    event.preventDefault();
+    const form=event.currentTarget;
+    const data=new FormData(form);
+    setServiceBusy(true);setError("");setNotice("");
+    try{
+      await api.post("/services",{
+        name:data.get("name"),
+        slug:data.get("slug"),
+        shortDescription:data.get("shortDescription"),
+        description:data.get("description"),
+      });
+      setNotice("Service created.");
+      form.reset();
+      await load(true);
+    }catch(err){setError(err.userMessage||"Could not create service.");}
+    finally{setServiceBusy(false);}
+  }
+
+  return <section className="portal-section"><div className="container">
+    <div className="portal-heading"><div><span className="eyebrow">ADMINISTRATION</span><h1>Firm overview.</h1><p>Manage client activity and keep service operations moving.</p></div><button className="button button-outline" onClick={()=>load()} disabled={loading}><RefreshCw size={15}/> {loading?"Refreshing…":"Refresh"}</button></div>
+    <Notice message={error} error/><Notice message={notice}/>
+    {loading&&!stats?<div className="empty-state">Loading administration data…</div>:<>
+      <div className="portal-stats">
+        <Stat icon={<Users/>} label="Registered clients" value={stats?.clients??clients.length}/>
+        <Stat icon={<FileText/>} label="Total inquiries" value={stats?.inquiries??inquiries.length}/>
+        <Stat icon={<CalendarDays/>} label="Consultation bookings" value={stats?.bookings??bookings.length}/>
+        <Stat icon={<ShieldCheck/>} label="Active services" value={stats?.services??services.length}/>
+      </div>
+      <div className="admin-tabs" role="tablist" aria-label="Admin management sections">
+        {[[ "bookings","Bookings" ],[ "inquiries","Inquiries" ],[ "requests","Service requests" ],[ "clients","Clients" ],[ "services","Services" ]].map(([id,label])=><button type="button" role="tab" aria-selected={tab===id} key={id} className={tab===id?"selected":""} onClick={()=>setTab(id)}>{label}</button>)}
+      </div>
+      <section className="portal-panel admin-table-panel">
+        {tab==="bookings"&&<><div className="panel-heading"><h2>Consultation bookings</h2></div><DataTable headers={["Client","Service","Preferred slot","Status","Update"]} rows={bookings.map(b=>{const key=`booking:${b._id}`;return [<><strong>{b.name}</strong><small>{b.email}</small></>,b.service,<>{new Date(b.preferredDate).toLocaleDateString("en-GB",{timeZone:"UTC"})}<small>{b.preferredTime}</small></>,<Status value={b.status}/>,<select className="table-select" aria-label={`Update booking for ${b.name}`} value={b.status} disabled={busyAction===key} onChange={event=>updateRecord("booking",b._id,event.target.value)}><option value="pending">Pending</option><option value="approved">Approve</option><option value="rejected">Reject</option><option value="completed">Complete</option></select>];})}/></>}
+        {tab==="inquiries"&&<><div className="panel-heading"><h2>Client inquiries</h2></div><DataTable headers={["Contact","Subject","Message","Date","Status"]} rows={inquiries.map(item=>{const key=`inquiry:${item._id}`;return [<><strong>{item.name}</strong><small>{item.email} · {item.phone||"No phone"}</small></>,item.subject,<span className="table-message" title={item.message}>{item.message}</span>,new Date(item.createdAt).toLocaleDateString(),<select className="table-select" aria-label={`Update inquiry from ${item.name}`} value={item.status} disabled={busyAction===key} onChange={event=>updateRecord("inquiry",item._id,event.target.value)}><option value="new">New</option><option value="in-progress">In progress</option><option value="resolved">Resolved</option></select>];})}/></>}
+        {tab==="requests"&&<><div className="panel-heading"><h2>Client service requests</h2></div><DataTable headers={["Client","Service","Details","Date","Status"]} rows={serviceRequests.map(item=>{const key=`request:${item._id}`;return [<><strong>{item.user?.name||"Client"}</strong><small>{item.user?.email||""}</small></>,item.service,<span className="table-message" title={item.details}>{item.details}</span>,new Date(item.createdAt).toLocaleDateString(),<select className="table-select" aria-label={`Update service request for ${item.user?.name||"client"}`} value={item.status} disabled={busyAction===key} onChange={event=>updateRecord("request",item._id,event.target.value)}><option value="pending">Pending</option><option value="in-progress">In progress</option><option value="approved">Approve</option><option value="rejected">Reject</option><option value="completed">Complete</option></select>];})}/></>}
+        {tab==="clients"&&<><div className="panel-heading"><h2>Registered clients</h2></div><DataTable headers={["Name","Email","Phone","Joined","Account"]} rows={clients.map(client=>[<strong>{client.name}</strong>,client.email,client.phone||"—",new Date(client.createdAt).toLocaleDateString(),<Status value={client.isActive?"active":"inactive"}/>])}/></>}
+        {tab==="services"&&<><div className="panel-heading"><h2>Manage services</h2></div><form className="inline-add-form" onSubmit={addService}><input name="name" required maxLength="120" placeholder="Service name"/><input name="slug" required maxLength="120" pattern="[a-z0-9]+(?:-[a-z0-9]+)*" title="Use lowercase letters, numbers and hyphens" placeholder="url-friendly-slug"/><input name="shortDescription" required maxLength="240" placeholder="Short description"/><input name="description" required maxLength="3000" placeholder="Full description"/><button className="button button-dark button-small" disabled={serviceBusy}>{serviceBusy?"Adding…":<><Plus size={15}/> Add</>}</button></form><DataTable headers={["Service","Slug","Description","Action"]} rows={services.map(service=>{const key=`service:${service._id}`;return [<strong>{service.name}</strong>,service.slug,<span className="table-message" title={service.shortDescription||service.description}>{service.shortDescription||service.description}</span>,<div className="table-actions"><button type="button" className="table-edit" disabled={busyAction===key} onClick={()=>editService(service)}>Edit</button><button type="button" className="table-delete" disabled={busyAction===key} onClick={()=>archiveService(service._id)}>Archive</button></div>];})}/></>}
+      </section>
+    </>}
+  </div></section>;
 }
 
 function DataTable({headers,rows}){return <div className="table-scroll"><table className="data-table"><thead><tr>{headers.map(h=><th key={h}>{h}</th>)}</tr></thead><tbody>{rows.length?rows.map((row,i)=><tr key={i}>{row.map((cell,j)=><td key={j}>{cell}</td>)}</tr>):<tr><td colSpan={headers.length} className="table-empty">No records to display.</td></tr>}</tbody></table></div>}
