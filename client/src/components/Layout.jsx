@@ -27,8 +27,8 @@ export default function Layout() {
       <header className="site-header">
         <div className="container nav-wrap">
           <Link to="/" className="brand" onClick={close} aria-label="PragnyX home"><span className="brand-mark">P<span>.</span></span><span className="brand-copy"><strong>PRAGNYX</strong><small>CHARTERED ACCOUNTANTS</small></span></Link>
-          <button className="mobile-menu" onClick={() => setOpen(!open)} aria-label={open ? "Close menu" : "Open menu"}>{open ? <X /> : <Menu />}</button>
-          <nav className={open ? "main-nav open" : "main-nav"}>
+          <button className="mobile-menu" type="button" onClick={() => setOpen(!open)} aria-label={open ? "Close menu" : "Open menu"} aria-expanded={open} aria-controls="primary-navigation">{open ? <X /> : <Menu />}</button>
+          <nav id="primary-navigation" aria-label="Primary navigation" className={open ? "main-nav open" : "main-nav"}>
             {navItems.map(([label, path]) => <NavLink key={path} to={path} onClick={close} className={({isActive}) => isActive ? "active" : ""}>{label}</NavLink>)}
             {user ? <>
               <NavLink to={user.role === "admin" ? "/admin" : "/dashboard"} onClick={close}>My portal</NavLink>
