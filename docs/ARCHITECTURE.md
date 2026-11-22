@@ -43,7 +43,7 @@ All collections use Mongoose timestamps (createdAt and updatedAt).
 - Service slug: unique index; additional { isActive, name } index for public listing.
 - Inquiry: { status, createdAt } index for administration views.
 - Booking: user index; { preferredDate, preferredTime, status } and { createdAt } indexes.
-- ServiceRequest: user index.
+- ServiceRequest: user and createdAt indexes.
 
 ## API route map
 
