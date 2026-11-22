@@ -10,6 +10,20 @@ The GitHub Actions workflow runs:
 
 The API integration suite covers health response, public service listing, client registration, duplicate registration, password hashing, login, JWT-protected profile, forbidden client access to admin routes, profile updates, authenticated inquiry ownership, admin inquiry status changes, invalid calendar dates, valid bookings, client service requests, booking approval, service request status updates, service create/update/archive, admin statistics and client listing.
 
+## Postman manual API check
+
+Import `postman/PragnyX_CA_Firm_Management.postman_collection.json` into Postman. Configure the collection variables as described in the README. Run the requests against a dedicated local/test database only.
+
+- [ ] Health check and public service listing.
+- [ ] Register and log in as a client; verify the returned client JWT.
+- [ ] Submit an anonymous inquiry and a signed-in inquiry; verify only the signed-in inquiry appears in that client's history.
+- [ ] Submit a future consultation booking and verify it appears in client history.
+- [ ] Submit a client service request and verify it appears in client history.
+- [ ] Log in as admin; verify statistics, clients, inquiries, bookings and requests.
+- [ ] Update an inquiry, booking and service-request status.
+- [ ] Create, edit and delete/archive a service; verify it is no longer returned by the public service endpoint.
+- [ ] Verify a client token receives 403 on admin endpoints and a missing token receives 401 on protected endpoints.
+
 ## Manual end-to-end smoke tests
 
 Run these checks against the actual deployed or local application after environment variables and MongoDB are configured.
