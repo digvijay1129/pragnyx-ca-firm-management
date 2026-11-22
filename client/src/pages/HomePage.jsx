@@ -10,11 +10,15 @@ const defaults = [
   { name:"GST Registration & Filing", slug:"gst-registration-filing", shortDescription:"Practical GST compliance, returns and registration support." },
   { name:"Company Registration", slug:"company-registration", shortDescription:"Choose the right structure and start your business with confidence." },
   { name:"Accounting & Bookkeeping", slug:"accounting-bookkeeping", shortDescription:"Reliable books and clear financial records for better decisions." },
+  { name:"Tax Planning & Consultancy", slug:"tax-planning-consultancy", shortDescription:"Plan ahead with a considered view of your tax position." },
+  { name:"Auditing Services", slug:"auditing-services", shortDescription:"Independent review and a disciplined approach to assurance." },
+  { name:"Financial Advisory", slug:"financial-advisory", shortDescription:"Make informed decisions with a clearer view of the numbers." },
+  { name:"Business Compliance", slug:"business-compliance", shortDescription:"Stay organised with recurring statutory obligations." },
 ];
 
 export default function HomePage() {
   const [services, setServices] = useState(defaults);
-  useEffect(() => { api.get("/services").then(({data}) => { if (data.services?.length) setServices(data.services.slice(0,4)); }).catch(() => {}); }, []);
+  useEffect(() => { api.get("/services").then(({data}) => { if (data.services?.length) setServices(data.services); }).catch(() => {}); }, []);
   return <>
     <section className="hero"><div className="hero-orb orb-one" /><div className="hero-orb orb-two" /><div className="container hero-grid">
       <div className="hero-copy"><div className="hero-kicker"><span /> FINANCIAL CLARITY. BUSINESS CONFIDENCE.</div><h1>Good decisions<br />start with <em>clarity.</em></h1><p className="hero-lede">Your numbers tell a story. We help you understand it, act on it, and build what comes next with confidence.</p><div className="hero-actions"><Link to="/booking" className="button button-gold">Book a consultation <ArrowUpRight size={17}/></Link><Link to="/services" className="button button-ghost">Explore our services <ArrowRight size={17}/></Link></div><div className="hero-proof"><div className="proof-avatars"><span>CA</span><span>FN</span><span>TX</span></div><div><strong>One partner for the bigger picture</strong><small>Tax · Audit · Accounting · Advisory</small></div></div></div>
