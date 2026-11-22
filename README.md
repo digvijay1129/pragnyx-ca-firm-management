@@ -154,6 +154,20 @@ Import `postman/PragnyX_CA_Firm_Management.postman_collection.json` into Postman
 
 GitHub Actions also executes all 26 collection requests with Newman against a disposable MongoDB database and CI-only test accounts; the latest completed run passed 34 assertions with zero failures. The sample client values are examples only. Change them before use. Keep admin credentials private and do not export/share a Postman environment containing real passwords or tokens. Do not point destructive requests or integration tests at production data.
 
+## Browser end-to-end tests
+
+The frontend uses Playwright Test with Chromium. The suite covers public navigation, mobile menu and layout overflow, the required public pages, registration, client profile updates, service requests, authenticated inquiries, consultation booking, administrator sign-in, booking/inquiry/request status changes, service create/edit/archive, and the client's view after administrator updates.
+
+With MongoDB and the API already running, seed the eight services and a test administrator using a dedicated test database. Then, from `client`:
+
+```bash
+npm install
+npx playwright install chromium
+PLAYWRIGHT_BASE_URL=http://127.0.0.1:5173 E2E_CLIENT_PASSWORD=use-a-test-only-password E2E_ADMIN_EMAIL=admin@example.test E2E_ADMIN_PASSWORD=use-a-test-only-admin-password npm run test:e2e
+```
+
+The frontend is started automatically by Playwright. Never use a production database or production administrator credentials for browser tests. CI provisions its own disposable MongoDB database and temporary accounts. Screenshots are saved under `client/test-results/screenshots`; Playwright traces and the HTML report are retained as GitHub Actions artifacts when available.
+
 ## Database collections
 
 - **User:** name, email, phone, password hash, role, active flag.
