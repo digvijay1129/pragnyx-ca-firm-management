@@ -144,9 +144,8 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test('Client registration returns 201', () => pm.response.to.have.status(201));",
-                  "const data = pm.response.json();",
-                  "pm.collectionVariables.set('clientToken', data.token);",
-                  "pm.collectionVariables.set('clientId', data.user.id);",
+                  "pm.collectionVariables.set('clientToken', pm.response.json().token);",
+                  "pm.collectionVariables.set('clientId', pm.response.json().user.id);",
                   "pm.test('HTTP 201 for Register client', () => pm.response.to.have.status(201));"
                 ]
               }
