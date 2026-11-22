@@ -178,7 +178,7 @@ The backend uses the Node.js test runner and Supertest. Integration tests connec
 ```bash
 cd server
 npm install
-MONGODB_URI=mongodb://127.0.0.1:27017/pragnyx_test JWT_SECRET=local-test-secret-with-enough-entropy npm test
+NODE_ENV=test MONGODB_URI=mongodb://127.0.0.1:27017/pragnyx_test JWT_SECRET=local-test-secret-with-enough-entropy npm test
 ```
 
 The integration test suite clears its configured test database before and after the run. **Use a dedicated test database only; never point the test command at a development, staging, or production database.**
