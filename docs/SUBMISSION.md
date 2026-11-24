@@ -34,17 +34,17 @@ Public registration creates client-role accounts only. Administrator accounts ar
 
 ## Automated verification
 
-Successful GitHub Actions run on the submission revision:
+Successful GitHub Actions verification for the submission package:
 
-- **Workflow run:** https://github.com/digvijay1129/pragnyx-ca-firm-management/actions/runs/45446280553
-- **Commit:** `6b9217582febacc085972470d5b1b1d0f7417d26` — `Create vercel.json`
+- **Latest submission-document workflow:** https://github.com/digvijay1129/pragnyx-ca-firm-management/actions/runs/45453154817 (run #111; commit `31eded1d621f0111cc6be46eabb0282d853ea425`; all three jobs passed).
+- **Application verification workflow:** https://github.com/digvijay1129/pragnyx-ca-firm-management/actions/runs/45446280553 (run #110; commit `6b9217582febacc085972470d5b1b1d0f7417d26`; all three jobs passed).
 - Frontend production build: passed
 - Backend JavaScript syntax check: passed
 - Backend API integration tests: 12 passed, 0 failed
 - Postman/Newman: 26 requests and 34 assertions, 0 failures
 - Playwright: 2 browser scenarios passed
 
-The CI run stores downloadable artifacts named `pragnyx-browser-e2e-report` and `pragnyx-postman-report`. The browser artifact includes screenshots of Home, About, Services on mobile, Service Details, Contact, Client Dashboard, Admin Dashboard, and client status after administrator updates.
+The successful CI runs store downloadable artifacts named `pragnyx-browser-e2e-report` and `pragnyx-postman-report`. The browser artifact includes screenshots of Home, About, Services on mobile, Service Details, Contact, Client Dashboard, Admin Dashboard, and client status after administrator updates.
 
 ## Test accounts and credential handoff
 
