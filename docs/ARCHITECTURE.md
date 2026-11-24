@@ -98,6 +98,8 @@ All API routes are mounted under /api. Protected routes require Authorization: B
 
 The backend reads configuration from server/.env. See server/.env.example for variable names. MongoDB must be reachable before the API starts listening. The /health endpoint responds after successful database connection and API startup.
 
-## Scope note
+## Verification and operational boundaries
 
-Phase 2 covers the Express/MongoDB foundation, schemas, route handlers, validation, and documentation. Full application execution, database integration checks, Postman verification, and end-to-end testing are intentionally reserved for Phase 5.
+The repository includes automated backend integration tests, a Postman collection executed with Newman in CI, and Playwright browser end-to-end tests. GitHub Actions also runs a frontend production build and backend syntax checks. These checks provide repeatable development evidence; they do not replace manual visual acceptance or a smoke test against a deployed environment.
+
+The repository does not itself provision production hosting, a live MongoDB database, real CA-firm contact information, or client/admin credentials for external reviewers. Those must be supplied/configured by the project owner. The brand and contact details shipped in demo mode are sample content and should not be represented as a real professional practice.
