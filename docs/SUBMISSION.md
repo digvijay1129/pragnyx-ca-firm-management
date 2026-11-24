@@ -36,7 +36,8 @@ Public registration creates client-role accounts only. Administrator accounts ar
 
 Successful GitHub Actions verification for the submission package:
 
-- **Latest submission-document workflow:** https://github.com/digvijay1129/pragnyx-ca-firm-management/actions/runs/45453154817 (run #111; commit `31eded1d621f0111cc6be46eabb0282d853ea425`; all three jobs passed).
+- **Submission-details workflow:** https://github.com/digvijay1129/pragnyx-ca-firm-management/actions/runs/45453154817 (run #111; commit `31eded1d621f0111cc6be46eabb0282d853ea425`; all three jobs passed).
+- **Follow-up documentation verification:** https://github.com/digvijay1129/pragnyx-ca-firm-management/actions/runs/45453593606 (run #112; commit `7daeb44992790924d87f676340c591b8f8dd7370`; all three jobs passed).
 - **Application verification workflow:** https://github.com/digvijay1129/pragnyx-ca-firm-management/actions/runs/45446280553 (run #110; commit `6b9217582febacc085972470d5b1b1d0f7417d26`; all three jobs passed).
 - Frontend production build: passed
 - Backend JavaScript syntax check: passed
