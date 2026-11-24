@@ -1,117 +1,220 @@
-# PragnyX — Chartered Accountant Firm Management Website
+<div align="center">
 
-A MERN-stack business website and client-management portal built against the PragnyX Full Stack Developer technical assignment. The project includes a public CA-firm website, client account area, consultation booking workflow, service requests, inquiry management, and a role-protected admin dashboard.
+# PragnyX
+### Chartered Accountant Firm Management Platform
 
-## Features implemented
+A full-stack MERN application for a CA firm's public website, client workspace, consultation bookings, service requests, and administrative operations.
 
-- Responsive public pages: Home, About Us, Services, Service Details, and Contact Us.
-- Eight CA services from the assignment: Income Tax Filing; GST Registration and Filing; Company Registration; Accounting and Bookkeeping; Tax Planning and Consultancy; Auditing Services; Financial Advisory; Business Compliance.
-- Client registration and login with bcrypt password hashing, JWT authentication, protected client routes, and profile editing.
-- Client portal for consultation status, service requests, and contact inquiry history.
-- Consultation booking with required fields, future-date validation, MongoDB persistence, and admin status changes.
-- Inquiry form and admin inquiry workflow.
-- Admin dashboard with client, inquiry, booking, service-request and service views; service create/archive actions and status management.
-- REST API, request validation, centralized errors, security headers, CORS configuration, and API rate limiting.
+[![Application Checks](https://github.com/digvijay1129/pragnyx-ca-firm-management/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/digvijay1129/pragnyx-ca-firm-management/actions/workflows/ci.yml)
+[![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=black)](https://react.dev/)
+[![Node.js](https://img.shields.io/badge/Node.js-20%2B-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-Mongoose-47A248?logo=mongodb&logoColor=white)](https://www.mongodb.com/)
+[![License](https://img.shields.io/badge/License-Private%20Assignment-lightgrey)](#)
 
-## Technology
+**[Repository](https://github.com/digvijay1129/pragnyx-ca-firm-management) · [Issues](https://github.com/digvijay1129/pragnyx-ca-firm-management/issues) · [Actions](https://github.com/digvijay1129/pragnyx-ca-firm-management/actions)**
 
-**Frontend:** React, React Router, Vite, Axios, Lucide React, responsive CSS.  
-**Backend:** Node.js, Express, Mongoose, JWT, bcryptjs, Helmet, CORS.  
-**Database:** MongoDB.
+</div>
 
-## Demo brand and sample contact details
+---
 
-PragnyX is a fictional accountancy and advisory brand created only for this technical assignment. It is not a registered CA firm, real professional practice or physical office. The site visibly labels itself as a demo while `VITE_DEMO_MODE=true`.
+## Overview
 
-| Brand/contact item | Assignment sample |
+PragnyX is a Chartered Accountant firm management website built for the **PragnyX MERN Stack Full Stack Developer technical assignment**. It brings the public-facing firm website and the internal client/admin workflows into one application.
+
+Visitors can explore the firm's services and send an inquiry. Registered clients can request services, book consultations, manage their profile, and review request statuses. Administrators can view dashboard statistics, clients, inquiries, bookings, service requests, and manage the service catalogue.
+
+> **Assignment/demo notice:** PragnyX is a fictional demonstration brand for this project. The sample contact details, social links, location, and testimonials are not real business information. Demo mode is enabled by default; form submissions are stored in the configured database and are not sent to a real CA firm.
+
+## Project highlights
+
+- Responsive public website with Home, About, Services, Service Details, and Contact pages.
+- Eight CA service categories from the assignment.
+- Client registration/login, bcrypt password hashing, JWT sessions, protected routes, and profile updates.
+- Client portal for consultation bookings, service requests, inquiry history, and statuses.
+- Consultation booking with required contact/service/date/time details and server-side past-date validation.
+- Admin dashboard with totals, registered clients, inquiries, bookings, service requests, and service catalogue management.
+- Server-side role-based authorization for administrator routes.
+- MongoDB/Mongoose persistence, input validation, centralized API error handling, Helmet, CORS, and rate limiting.
+- Automated API integration tests, Postman/Newman collection, Playwright browser tests, and GitHub Actions CI.
+
+## Technology stack
+
+| Layer | Technologies |
 |---|---|
-| Brand | PragnyX |
-| Descriptor | Accountancy & Advisory |
-| Tagline | Clarity in every number. Confidence in every decision. |
-| Email | `hello@pragnyx.example` (non-deliverable example address) |
-| Phone | `+91 00000 00000` (placeholder; not callable) |
-| Office hours | Monday-Friday, 9:30 AM-6:30 PM (sample hours) |
-| Location | Demo location - India (no physical office) |
-| Social profiles | LinkedIn and Instagram platform links are placeholders, not company profiles |
+| Frontend | React 18, React Router, Vite, Axios, JavaScript, HTML5, CSS3, Lucide React |
+| Backend | Node.js, Express.js, REST API |
+| Database | MongoDB, Mongoose |
+| Authentication & security | JWT, bcryptjs, Helmet, CORS, express-rate-limit |
+| Testing | Node.js Test Runner, Supertest, Postman/Newman, Playwright |
+| Tooling | npm, Git, GitHub Actions |
 
-Demo contact values are intentionally non-operational. The Contact and Consultation forms explain that submissions are saved in the assignment database and are not delivered to a real firm. Keep demo mode enabled for assignment review. Only turn it off after replacing every sample contact/social value with details authorised for a real business.
+## Feature modules
 
-## Repository structure
+### Public website
+- Home page with brand/navigation, hero, firm introduction, services, value proposition, testimonials, and footer.
+- About Us page.
+- Services catalogue and individual service detail pages.
+- Contact Us form with full name, email, phone, subject, and message.
+- Responsive navigation and mobile layout.
 
-The frontend is organised by business feature. Each area owns its pages and feature-specific components, while cross-feature UI and infrastructure live in `shared`.
+### CA services
+1. Income Tax Filing
+2. GST Registration & Filing
+3. Company Registration
+4. Accounting & Bookkeeping
+5. Tax Planning & Consultancy
+6. Auditing Services
+7. Financial Advisory
+8. Business Compliance
+
+Each service has a name, URL slug, short description, full description, icon identifier, and active/archive state.
+
+### Client portal
+- Register and sign in.
+- View and update profile details.
+- Submit service requests.
+- Request consultations by selecting a service and preferred date/time.
+- View consultation, service request, and inquiry history with current statuses.
+
+### Admin portal
+- Separate admin-only access enforced by API middleware.
+- Dashboard statistics and registered client list.
+- Review and update inquiry statuses.
+- Approve, reject, or complete consultation bookings.
+- Review and update service request statuses.
+- Create, edit, and archive services. Archiving hides a service from the public catalogue while preserving historical records.
+
+## Application pages
+
+| Page | Route | Access |
+|---|---|---|
+| Home | `/` | Public |
+| About Us | `/about` | Public |
+| Services | `/services` | Public |
+| Service Details | `/services/:slug` | Public |
+| Contact Us | `/contact` | Public |
+| Login | `/login` | Public |
+| Register | `/register` | Public |
+| Consultation Booking | `/booking` | Page is public; submission requires client login |
+| Client Dashboard | `/dashboard` | Authenticated client |
+| Admin Dashboard | `/admin` | Authenticated administrator |
+
+## Architecture
+
+The application uses a feature-oriented React frontend and an Express REST API. The API applies validation and authorization before Mongoose reads/writes MongoDB.
 
 ```text
-client/
-  e2e/                         Playwright browser tests
-  src/
-    app/                       Application router and route composition
-    data/                      Static reference and fallback data
-    features/
-      admin/                   Admin dashboard and management tables
-      auth/                    Login, registration, auth context and auth shell
-      booking/                 Consultation booking workflow
-      client/                  Client portal, profile and service requests
-      public/                  Home, About, Services, Service Details, Contact
-    shared/
-      components/              Common sections, form fields, notices and status UI
-      layout/                  Site header, navigation and footer
-      lib/                     API client and firm configuration
-      pages/                   Shared fallback pages
-      routing/                 Protected-route rules
-    main.jsx                   Browser entry point and providers
-    styles.css                 Global design system and responsive styles
-  index.html
-  package.json
-server/
-  src/                         Config, controllers, middleware, models, routes, scripts and utils
-docs/                          Architecture, assignment and deployment notes
-postman/                       Importable API collection
-.github/workflows/             CI build and integration tests
+Browser
+  |
+  | React + React Router + Axios
+  v
+Express REST API (/api)
+  |
+  +-- Authentication & role middleware
+  +-- Controllers / validation / error handling
+  |
+  v
+MongoDB (Mongoose)
+  |
+  +-- User
+  +-- Service
+  +-- Inquiry
+  +-- Booking
+  +-- ServiceRequest
 ```
 
-## Requirements
+### Repository structure
 
-- Node.js 20 or later
-- npm
-- MongoDB local instance or MongoDB Atlas database
+```text
+.
+├── client/
+│   ├── e2e/                       # Playwright browser tests
+│   ├── src/
+│   │   ├── app/                   # Route composition
+│   │   ├── data/                  # Local reference/fallback service data
+│   │   ├── features/
+│   │   │   ├── admin/             # Admin dashboard and tables
+│   │   │   ├── auth/              # Login, registration and auth context
+│   │   │   ├── booking/           # Consultation booking
+│   │   │   ├── client/            # Client dashboard, profile and requests
+│   │   │   └── public/            # Public-facing pages
+│   │   ├── shared/                # Shared layout, components, routing and API
+│   │   └── styles.css
+│   ├── .env.example
+│   └── package.json
+├── server/
+│   ├── src/
+│   │   ├── config/                # MongoDB connection
+│   │   ├── controllers/
+│   │   ├── middleware/            # JWT/role auth and error handling
+│   │   ├── models/                # Mongoose schemas
+│   │   ├── routes/
+│   │   ├── scripts/               # Service/admin seed script
+│   │   └── utils/                 # Async handler and validators
+│   ├── test/                      # API integration tests
+│   ├── .env.example
+│   └── package.json
+├── docs/
+│   ├── ARCHITECTURE.md
+│   ├── ASSIGNMENT-CHECKLIST.md
+│   ├── BRAND-GUIDELINES.md
+│   ├── FRONTEND-ARCHITECTURE.md
+│   └── TESTING-AND-DEPLOYMENT.md
+├── postman/
+│   └── PragnyX_CA_Firm_Management.postman_collection.json
+└── .github/workflows/             # GitHub Actions CI
+```
 
-## Run locally
+## Getting started
 
-### 1. Backend
+### Prerequisites
+
+- Node.js 20 or newer and npm.
+- MongoDB running locally or a MongoDB Atlas connection string.
+- Git.
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/digvijay1129/pragnyx-ca-firm-management.git
+cd pragnyx-ca-firm-management
+```
+
+### 2. Configure and start the backend
 
 ```bash
 cd server
 npm install
 ```
 
-Copy `.env.example` to `.env` and set your own values:
+Copy `.env.example` to `.env` and configure the values:
 
 ```env
 NODE_ENV=development
 PORT=5000
 CLIENT_URL=http://localhost:5173
 MONGODB_URI=mongodb://127.0.0.1:27017/pragnyx_ca_firm
-JWT_SECRET=use-a-long-random-secret-value
+JWT_SECRET=replace_with_a_long_random_secret
 JWT_EXPIRES_IN=1d
+
+# Optional first administrator account
 ADMIN_NAME=PragnyX Administrator
 ADMIN_EMAIL=admin@your-domain.example
 ADMIN_PASSWORD=use-a-unique-password-of-at-least-12-characters
 ```
 
-Seed the eight services and optionally create the first administrator:
+Generate a strong private JWT secret; do not use the example value in a deployed environment. To create the first administrator, set all three `ADMIN_*` values. The seed script creates/updates that administrator and seeds the eight services:
 
 ```bash
 npm run seed
 npm run dev
 ```
 
-The API starts at `http://localhost:5000`; health check: `http://localhost:5000/health`.
+The API will be available at `http://localhost:5000`. Health endpoint: `http://localhost:5000/health`.
 
-The seed command creates an admin account only when all three `ADMIN_*` settings are supplied. It does not create a hard-coded default administrator. Keep the real `.env` file private.
+### 3. Configure and start the frontend
 
-### 2. Frontend
-
-In a second terminal:
+Open a second terminal:
 
 ```bash
 cd client
@@ -131,121 +234,186 @@ VITE_FIRM_HOURS=Monday-Friday, 9:30 AM-6:30 PM (sample hours)
 VITE_FIRM_LOCATION=Demo location - India (no physical office)
 ```
 
-Start the frontend:
+Start the Vite development server:
 
 ```bash
 npm run dev
 ```
 
-Open `http://localhost:5173`.
+Open [http://localhost:5173](http://localhost:5173).
 
-Create a normal client account through Register. Sign in to the administrator account created by the seed command to access `/admin`.
+### 4. Sign in
 
-## API overview
+- Create a client account using the **Register** page.
+- Sign in with the administrator credentials configured in `server/.env` and created by `npm run seed` to access `/admin`.
+- Do not add real passwords, JWTs, or production credentials to this repository or README.
 
-| Method | Endpoint | Access | Purpose |
+## Environment variables
+
+### Backend (`server/.env`)
+
+| Variable | Required | Description |
+|---|---|---|
+| `NODE_ENV` | No | Runtime mode; use `production` when deployed |
+| `PORT` | No | API port; defaults to 5000 |
+| `CLIENT_URL` | No | Allowed frontend origin for CORS |
+| `MONGODB_URI` | Yes | MongoDB connection string |
+| `JWT_SECRET` | Yes for auth | Private JWT signing secret |
+| `JWT_EXPIRES_IN` | No | JWT lifetime; defaults to `1d` |
+| `ADMIN_NAME` | Optional | First admin display name |
+| `ADMIN_EMAIL` | Optional | First admin email; must be set with password |
+| `ADMIN_PASSWORD` | Optional | First admin password; minimum 12 characters and maximum 72 UTF-8 bytes |
+
+### Frontend (`client/.env`)
+
+| Variable | Description |
+|---|---|
+| `VITE_API_BASE_URL` | API base URL, normally ending in `/api` |
+| `VITE_DEMO_MODE` | Keep `true` for assignment/demo display |
+| `VITE_LINKEDIN_URL`, `VITE_INSTAGRAM_URL` | Sample social destinations; replace with authorised firm profiles |
+| `VITE_FIRM_EMAIL`, `VITE_FIRM_PHONE` | Public contact details |
+| `VITE_FIRM_HOURS`, `VITE_FIRM_LOCATION` | Public business hours and location |
+
+Vite variables are public and are embedded in the browser bundle. Never put secrets in `VITE_*` variables. The project keeps the demo disclosure enabled unless explicitly disabled and the required contact values are configured. Only disable demo mode when the owner has supplied and approved real business details.
+
+## REST API reference
+
+All API routes below are mounted under `/api`. Protected requests use:
+
+```http
+Authorization: Bearer <JWT>
+```
+
+| Method | Endpoint | Access | Description |
 |---|---|---|---|
-| POST | `/api/auth/register` | Public | Create client account |
-| POST | `/api/auth/login` | Public | Login and receive JWT |
-| GET | `/api/auth/me` | Client/Admin | Current user |
-| PATCH | `/api/auth/profile` | Client/Admin | Update name and phone |
-| GET | `/api/services` | Public | List active services |
-| GET | `/api/services/:slug` | Public | Service detail |
-| POST | `/api/services` | Admin | Create a service |
-| PATCH | `/api/services/:id` | Admin | Update a service |
-| DELETE | `/api/services/:id` | Admin | Archive a service |
-| POST | `/api/inquiries` | Public | Submit contact inquiry |
-| GET | `/api/inquiries/mine` | Client | Client inquiry history |
-| GET | `/api/inquiries` | Admin | List inquiries |
-| PATCH | `/api/inquiries/:id/status` | Admin | Update inquiry status |
-| POST | `/api/bookings` | Client | Request consultation |
-| GET | `/api/bookings/mine` | Client | Client bookings |
-| GET | `/api/bookings` | Admin | All bookings |
-| PATCH | `/api/bookings/:id/status` | Admin | Approve/reject/complete booking |
-| POST | `/api/service-requests` | Client | Submit service request |
-| GET | `/api/service-requests/mine` | Client | Client service requests |
-| GET | `/api/service-requests` | Admin | All service requests |
-| PATCH | `/api/service-requests/:id/status` | Admin | Update service request |
-| GET | `/api/admin/stats` | Admin | Dashboard counts |
-| GET | `/api/admin/clients` | Admin | Registered clients |
+| POST | `/auth/register` | Public | Register a client account |
+| POST | `/auth/login` | Public | Authenticate and return a JWT |
+| GET | `/auth/me` | Signed-in user | Read the current account |
+| PATCH | `/auth/profile` | Signed-in user | Update name and phone |
+| GET | `/services` | Public | List active CA services |
+| GET | `/services/:slug` | Public | Read service details |
+| POST | `/services` | Admin | Create service |
+| PATCH | `/services/:id` | Admin | Update service |
+| DELETE | `/services/:id` | Admin | Archive service |
+| POST | `/inquiries` | Public / optional auth | Submit contact inquiry |
+| GET | `/inquiries/mine` | Signed-in user | Read own inquiries |
+| GET | `/inquiries` | Admin | List inquiries |
+| PATCH | `/inquiries/:id/status` | Admin | Update inquiry status |
+| POST | `/bookings` | Signed-in client | Create consultation request |
+| GET | `/bookings/mine` | Signed-in client | Read own bookings |
+| GET | `/bookings` | Admin | List consultation bookings |
+| PATCH | `/bookings/:id/status` | Admin | Update booking status |
+| POST | `/service-requests` | Signed-in client | Submit service request |
+| GET | `/service-requests/mine` | Signed-in client | Read own service requests |
+| GET | `/service-requests` | Admin | List service requests |
+| PATCH | `/service-requests/:id/status` | Admin | Update service request status |
+| GET | `/admin/stats` | Admin | Dashboard counts |
+| GET | `/admin/clients` | Admin | Registered clients |
+| GET | `/health` | Public | API health status |
 
-Send protected API requests with `Authorization: Bearer <token>`.
+## Database design
 
-## Postman API collection
+The application uses five Mongoose collections:
 
-Import `postman/PragnyX_CA_Firm_Management.postman_collection.json` into Postman. The collection includes health, public services, authentication, contact/inquiries, client booking/service requests, and admin management requests.
+| Collection | Important fields | Purpose |
+|---|---|---|
+| `User` | name, email, phone, password hash, role, isActive | Client and administrator accounts; email is unique |
+| `Service` | name, slug, shortDescription, description, icon, isActive | Public service catalogue; unique slug |
+| `Inquiry` | optional user reference, name, email, phone, subject, message, status | Contact messages; supports anonymous visitors |
+| `Booking` | client reference, contact details, service, preferred date/time, message, status, admin note | Consultation requests |
+| `ServiceRequest` | client reference, service, details, status, admin note | Client requests for specific services |
 
-1. Start MongoDB and the backend API.
-2. Set collection variables `apiHost` to `127.0.0.1` and `apiPort` to `5000` (or the host and port of your running API).
-3. Set a unique client email/password and register the client, or use the client login request. The response stores `clientToken`.
-4. Configure the administrator privately using `server/.env`, run `npm run seed`, then enter `adminEmail` and `adminPassword` in Postman and run the admin login request. The response stores `adminToken`.
-5. Set `preferredDate` to a future date in `YYYY-MM-DD` format and `selectedService` to an active service name before submitting a booking or service request.
-6. Run requests in their folder order. Successful create requests save record IDs into collection variables for later admin update requests.
+Passwords are hashed using bcrypt before persistence. Public registration creates client-role accounts only; administrator creation is controlled by the seed script. Booking and service request records keep a service-name snapshot so the historical request remains readable if a catalogue item is later renamed or archived.
 
-GitHub Actions also executes all 26 collection requests with Newman against a disposable MongoDB database and CI-only test accounts; the latest completed run passed 34 assertions with zero failures. The sample client values are examples only. Change them before use. Keep admin credentials private and do not export/share a Postman environment containing real passwords or tokens. Do not point destructive requests or integration tests at production data.
+For indexes, relationships, field enumerations, validation and route details, see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
-## Browser end-to-end tests
+## Testing and quality checks
 
-The frontend uses Playwright Test with Chromium. The suite covers public navigation, mobile menu and layout overflow, the required public pages, registration, client profile updates, service requests, authenticated inquiries, consultation booking, administrator sign-in, booking/inquiry/request status changes, service create/edit/archive, and the client's view after administrator updates.
+### Backend API integration tests
 
-With MongoDB and the API already running, seed the eight services and a test administrator using a dedicated test database. Then, from `client`:
+The backend uses Node's built-in test runner and Supertest. Tests connect to a database with a name ending in `_test`; the configured test database is cleared and dropped by the suite.
 
 ```bash
+cd server
+npm install
+NODE_ENV=test MONGODB_URI=mongodb://127.0.0.1:27017/pragnyx_ca_firm_test JWT_SECRET=local-test-secret-with-enough-entropy npm test
+```
+
+> **Safety:** Use a dedicated disposable test database only. The test suite drops its configured database. Never run it against development, staging, or production data.
+
+### Frontend end-to-end tests
+
+Playwright browser tests cover public pages, mobile navigation/layout, contact submission, client registration/profile/request/booking workflows, administrator status updates, client visibility of updates, and service create/edit/archive.
+
+With a dedicated test database, API and seed administrator available:
+
+```bash
+cd client
 npm install
 npx playwright install chromium
 PLAYWRIGHT_BASE_URL=http://127.0.0.1:5173 E2E_CLIENT_PASSWORD=use-a-test-only-password E2E_ADMIN_EMAIL=admin@example.test E2E_ADMIN_PASSWORD=use-a-test-only-admin-password npm run test:e2e
 ```
 
-The frontend is started automatically by Playwright. Never use a production database or production administrator credentials for browser tests. CI provisions its own disposable MongoDB database and temporary accounts. The latest completed workflow passed **2 Playwright scenarios** (public/responsive pages and the client/admin end-to-end workflow). Screenshots are saved under `client/test-results/screenshots`; Playwright traces and the HTML report are retained as GitHub Actions artifacts. [View the successful browser test run](https://github.com/digvijay1129/pragnyx-ca-firm-management/actions/runs/44986474929).
+The Playwright configuration starts the frontend development server. Keep test credentials private and use only test data.
 
-## Database collections
+### Postman collection
 
-- **User:** name, email, phone, password hash, role, active flag.
-- **Service:** name, unique slug, short/full description, icon, active flag.
-- **Inquiry:** optional user reference, contact details, subject, message, status.
-- **Booking:** client reference and contact details, requested service/date/time, message, status and admin note.
-- **ServiceRequest:** client reference, service, details, status and admin note.
+Import `postman/PragnyX_CA_Firm_Management.postman_collection.json` into Postman. Set the API host/port and provide client/admin test credentials in the collection variables. Run against a local or dedicated test environment, never production. The CI workflow executes this collection using Newman.
 
-## Security notes
+### Continuous integration
 
-- Passwords are hashed with bcryptjs and are never returned by user API responses.
-- Public registration always creates a `client`; administrator role is assigned only by the controlled seed process.
-- Admin API routes enforce role-based authorization on the server.
-- Booking dates are validated as real calendar dates on the backend as well as in the browser.
-- Secrets belong in local environment variables or deployment secret settings, never in Git.
-- This is an assignment implementation. Before production use, consider moving JWTs to secure HttpOnly cookies, adding email verification/password reset, audit logging, CSRF protections as applicable, and more comprehensive automated tests.
+GitHub Actions validates the frontend production build, backend syntax, and MongoDB-backed API integration tests when changes are pushed or pull requests are opened against `main`.
 
-## Automated API tests
+See [GitHub Actions](https://github.com/digvijay1129/pragnyx-ca-firm-management/actions) for current run results. A successful CI run verifies only the checks it executes; it does not prove that production hosting has been configured.
 
-The backend uses the Node.js test runner and Supertest. Integration tests connect to a disposable MongoDB database and exercise real Express routes.
+## Assignment compliance and submission checklist
 
-```bash
-cd server
-npm install
-NODE_ENV=test MONGODB_URI=mongodb://127.0.0.1:27017/pragnyx_test JWT_SECRET=local-test-secret-with-enough-entropy npm test
-```
+The feature implementation is mapped to the supplied seven-page assignment in [docs/ASSIGNMENT-CHECKLIST.md](docs/ASSIGNMENT-CHECKLIST.md). The PDF's evaluation weights are:
 
-The integration test suite clears its configured test database before and after the run. **Use a dedicated test database only; never point the test command at a development, staging, or production database.**
+| Evaluation area | Marks |
+|---|---:|
+| Frontend design & responsiveness | 20 |
+| Backend & API development | 20 |
+| MongoDB & database design | 15 |
+| Authentication & security | 15 |
+| Functional implementation | 15 |
+| Code quality & GitHub | 5 |
+| Testing & deployment | 10 |
+| **Total** | **100** |
 
-GitHub Actions runs three checks on pushes and pull requests to main: the frontend production build, backend JavaScript syntax validation, and MongoDB-backed API integration tests.
+Before final submission:
+- [ ] Verify all ten required pages in a browser.
+- [ ] Review desktop, tablet, and mobile layouts and capture screenshots of major modules.
+- [ ] Run the Postman collection against the configured API.
+- [ ] Create test admin/client credentials and share them securely outside source control.
+- [ ] Replace or clearly retain disclaimers for sample contact details and testimonials.
+- [ ] Deploy frontend, backend, and database; record the real live URLs.
+- [ ] Re-run smoke tests against the deployed application.
 
-## Deployment checklist
+The repository currently documents local execution and automated checks. **Live website and backend API URLs are not included because a deployment has not been configured in this repository.** Deployment steps are in [docs/TESTING-AND-DEPLOYMENT.md](docs/TESTING-AND-DEPLOYMENT.md).
 
-Deployment requires accounts and credentials that must be supplied by the project owner:
+## Demo content and production readiness
 
-1. Create a MongoDB Atlas database and a database user. Restrict network access to the deployed API service where practical.
-2. Deploy the Node.js API from the `server` directory. Set `NODE_ENV=production`, `PORT` (provided by the host), `MONGODB_URI`, a long random `JWT_SECRET`, `JWT_EXPIRES_IN=1d`, and the exact frontend origin in `CLIENT_URL`.
-3. Run `npm run seed` once against the production database. Set `ADMIN_NAME`, `ADMIN_EMAIL` and a unique `ADMIN_PASSWORD` of at least 12 characters for the first administrator. Run this command only against the intended database.
-4. Deploy the static frontend from the `client` directory with build command `npm install && npm run build` and publish directory `dist`. Set `VITE_API_BASE_URL` to the deployed API's `/api` URL. Keep `VITE_DEMO_MODE=true` for this assignment version. Do not present the sample contact details as real. Only set `VITE_DEMO_MODE=false` after replacing the sample email, phone, hours, location and social URLs with details authorised by the actual firm.
-5. Configure SPA fallback rewrites to `/index.html`, update the API CORS origin to the actual frontend domain, and verify the public `/health` endpoint.
-6. Perform the manual smoke-test checklist in `docs/TESTING-AND-DEPLOYMENT.md` and record the final frontend URL, API URL, and separately shared test credentials.
+- Sample email uses the reserved `.example` domain and cannot receive email.
+- Phone, location, social links, hours, and testimonials are demonstration content.
+- Contact and booking forms persist records in MongoDB; no email notification provider is configured.
+- Payment integration is not included; the assignment explicitly states it is not required.
+- Before production use, configure real business content, deployment secrets, monitoring, backups, and a reviewed privacy/security policy. Consider secure HttpOnly cookie sessions, CSRF protection as applicable, email verification/password reset, and audit logging.
 
-Do not commit production secrets or real administrator credentials. The repository does not currently contain live deployment URLs; these are created by the chosen hosting accounts.
+## Documentation
 
-## Assignment reference
+- [Assignment compliance checklist](docs/ASSIGNMENT-CHECKLIST.md)
+- [Architecture and database notes](docs/ARCHITECTURE.md)
+- [Frontend architecture](docs/FRONTEND-ARCHITECTURE.md)
+- [Brand guidelines](docs/BRAND-GUIDELINES.md)
+- [Testing and deployment guide](docs/TESTING-AND-DEPLOYMENT.md)
 
-See [docs/ASSIGNMENT-CHECKLIST.md](docs/ASSIGNMENT-CHECKLIST.md) for the feature checklist and [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the collection schema, relationships, indexes, validation rules and complete API route map. The project should be evaluated against the supplied PragnyX assignment PDF; PragnyX is a fictional demo brand and its clearly labelled contact/social details are non-operational samples. Keep demo mode enabled for assignment review.
+---
 
-## Branch policy
+<div align="center">
 
-All work for this project is maintained on the single `main` branch.
+**PragnyX · MERN Stack Technical Assignment**
+
+Built as an educational/technical demonstration. Not a live professional CA practice.
+
+</div>
